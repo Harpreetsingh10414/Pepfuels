@@ -34,8 +34,12 @@ router.post(
         password,
       });
 
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(password, salt);
+      // Commenting out hashing
+      // const salt = await bcrypt.genSalt(10);
+      // user.password = await bcrypt.hash(password, salt);
+
+      // Directly use the plaintext password
+      user.password = password;
 
       await user.save();
 
@@ -55,7 +59,7 @@ router.post(
         }
       );
     } catch (err) {
-      console.error(err.message);
+      console.error('Registration error:', err.message);
       res.status(500).send('Server error');
     }
   }
@@ -84,8 +88,14 @@ router.post(
         return res.status(400).json({ msg: 'Invalid credentials' });
       }
 
-      // Check if password matches
-      const isMatch = await bcrypt.compare(password, user.password);
+      // Commenting out password comparison
+      // const isMatch = await bcrypt.compare(password, user.password);
+
+      // Directly compare plaintext passwords
+      const isMatch = password === user.password;
+      
+      console.log('Password to compare:', password);
+      console.log('Stored password:', user.password);
       console.log(`Password match: ${isMatch}`);
 
       if (!isMatch) {
@@ -109,7 +119,7 @@ router.post(
         }
       );
     } catch (err) {
-      console.error(err.message);
+      console.error('Login error:', err.message);
       res.status(500).send('Server error');
     }
   }
