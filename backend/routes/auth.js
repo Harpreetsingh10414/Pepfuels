@@ -16,15 +16,18 @@ router.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('Register Route: Validation errors:', errors.array());
       return res.status(400).json({ errors: errors.array() });
     }
 
     const { name, email, password } = req.body;
+    console.log('Register Route: Incoming data:', { name, email, password });
 
     try {
       let user = await User.findOne({ email });
 
       if (user) {
+        console.log('Register Route: User already exists');
         return res.status(400).json({ msg: 'User already exists' });
       }
 
@@ -42,6 +45,7 @@ router.post(
       user.password = password;
 
       await user.save();
+      console.log('Register Route: User registered successfully:', user);
 
       const payload = {
         user: {
@@ -55,11 +59,12 @@ router.post(
         { expiresIn: '1h' },
         (err, token) => {
           if (err) throw err;
+          console.log('Register Route: JWT generated:', token);
           res.json({ token });
         }
       );
     } catch (err) {
-      console.error('Registration error:', err.message);
+      console.error('Register Route: Server error:', err.message);
       res.status(500).send('Server error');
     }
   }
@@ -75,16 +80,18 @@ router.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('Login Route: Validation errors:', errors.array());
       return res.status(400).json({ errors: errors.array() });
     }
 
     const { email, password } = req.body;
+    console.log('Login Route: Incoming data:', { email, password });
 
     try {
       let user = await User.findOne({ email });
 
       if (!user) {
-        console.log("User not found");
+        console.log('Login Route: User not found');
         return res.status(400).json({ msg: 'Invalid credentials' });
       }
 
@@ -93,13 +100,13 @@ router.post(
 
       // Directly compare plaintext passwords
       const isMatch = password === user.password;
-      
+
       console.log('Password to compare:', password);
       console.log('Stored password:', user.password);
       console.log(`Password match: ${isMatch}`);
 
       if (!isMatch) {
-        console.log("Password does not match");
+        console.log('Login Route: Password does not match');
         return res.status(400).json({ msg: 'Invalid credentials' });
       }
 
@@ -115,11 +122,12 @@ router.post(
         { expiresIn: '1h' },
         (err, token) => {
           if (err) throw err;
+          console.log('Login Route: JWT generated:', token);
           res.json({ token });
         }
       );
     } catch (err) {
-      console.error('Login error:', err.message);
+      console.error('Login Route: Server error:', err.message);
       res.status(500).send('Server error');
     }
   }
