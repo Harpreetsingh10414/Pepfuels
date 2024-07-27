@@ -13,6 +13,7 @@ app.use(express.json({ extended: false }));
 
 // Define Routes
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/profile', require('./routes/profile')); // Add this line to include profile routes
 
 // Simple route to fetch users
 app.get('/api/users', async (req, res) => {
