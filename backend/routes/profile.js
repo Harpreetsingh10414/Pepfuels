@@ -4,6 +4,37 @@ const User = require('../models/User');
 const router = express.Router();
 
 /**
+ * @swagger
+ * /api/profile:
+ *   get:
+ *     summary: Get user profile
+ *     description: Retrieve the profile details of the logged-in user.
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User profile retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 name:
+ *                   type: string
+ *                   example: John Doe
+ *                 email:
+ *                   type: string
+ *                   example: john.doe@example.com
+ *                 phone:
+ *                   type: string
+ *                   example: 123-456-7890
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
+
+/**
  * Route to get the user's profile
  * @route GET /api/profile
  * @access Private

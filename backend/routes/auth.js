@@ -7,6 +7,45 @@ const authMiddleware = require('../middleware/auth'); // Make sure this path is 
 const router = express.Router();
 
 // User Registration Route
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     description: Create a new user with name, email, and password.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: John Doe
+ *               email:
+ *                 type: string
+ *                 example: john.doe@example.com
+ *               password:
+ *                 type: string
+ *                 example: password123
+ *     responses:
+ *       200:
+ *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZhMTNmZTNhZjk2OTZjMzdkMzBjNTk5In0sImlhdCI6MTYxMjYzMzMwMCwiZXhwIjoxNjEyNjM2OTAwfQ.sG5VtPIwFvZOiSeQOLVcW2cRVypgxj4zhcn9tJpwhzU
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Server error
+ */
+
 router.post(
   '/register',
   [
@@ -69,6 +108,42 @@ router.post(
 
 
 // User Login Route
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Login a user
+ *     description: Authenticate a user and return a JWT token.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: john.doe@example.com
+ *               password:
+ *                 type: string
+ *                 example: password123
+ *     responses:
+ *       200:
+ *         description: User logged in successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZhMTNmZTNhZjk2OTZjMzdkMzBjNTk5In0sImlhdCI6MTYxMjYzMzMwMCwiZXhwIjoxNjEyNjM2OTAwfQ.sG5VtPIwFvZOiSeQOLVcW2cRVypgxj4zhcn9tJpwhzU
+ *       400:
+ *         description: Invalid credentials
+ *       500:
+ *         description: Server error
+ */
+
 router.post(
   '/login',
   [
@@ -177,6 +252,39 @@ router.put(
     }
   }
 );
+
+/**
+ * @swagger
+ * /api/profile/password:
+ *   put:
+ *     summary: Change user password
+ *     description: Update the password of the logged-in user.
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 example: oldpassword123
+ *               newPassword:
+ *                 type: string
+ *                 example: newpassword123
+ *     responses:
+ *       200:
+ *         description: Password updated successfully
+ *       400:
+ *         description: Bad request or incorrect current password
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
+
 
 // Change Password Route
 router.put(

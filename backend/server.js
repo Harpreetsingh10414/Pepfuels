@@ -1,6 +1,6 @@
 const express = require('express');
 const connectDB = require('./config/database');
-const User = require('./models/User'); // Import the User model
+const { swaggerUi, swaggerSpec } = require('./config/swagger'); // Update this path
 require('dotenv').config();
 
 const app = express();
@@ -11,9 +11,12 @@ connectDB();
 // Middleware
 app.use(express.json({ extended: false }));
 
+// Swagger route
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // Define Routes
 app.use('/api/auth', require('./routes/auth'));
-app.use('/api/profile', require('./routes/profile')); // Add this line to include profile routes
+app.use('/api/profile', require('./routes/profile')); // Ensure profile route is included
 
 // Simple route to fetch users
 app.get('/api/users', async (req, res) => {
@@ -30,4 +33,5 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Swagger documentation available at http://localhost:${PORT}/api-docs`);
 });
