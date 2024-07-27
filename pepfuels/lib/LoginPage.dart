@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -60,11 +61,31 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Image.asset(
-              '../assets/images/headerall.jpg', // Ensure this path is correct
-              width: double.infinity,
-              height: 200.0, // Adjust height as needed
-              fit: BoxFit.cover,
+            Stack(
+              children: <Widget>[
+                Image.asset(
+                  '../assets/images/headerall.jpg', // Ensure this path is correct
+                  width: double.infinity,
+                  height: 200.0, // Adjust height as needed
+                  fit: BoxFit.cover,
+                ),
+                Positioned(
+                  bottom: 75, // Adjust vertical position as needed
+                  left: 16, // Adjust horizontal position as needed
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    // color: Colors.black.withOpacity(0.5), // Semi-transparent background
+                    child: Text(
+                      'Login',
+                      style: TextStyle(
+                        fontSize: 24, // Adjust font size as needed
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white, // Text color
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.all(16.0), // Add padding around the form

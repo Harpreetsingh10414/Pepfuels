@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
@@ -66,11 +67,27 @@ class _RegisterPageState extends State<RegisterPage> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Image.asset(
-              '../assets/images/headerall.jpg', // Ensure this path is correct
-              width: double.infinity,
-              height: 200.0,
-              fit: BoxFit.cover,
+            Stack(
+              children: [
+                Image.asset(
+                  '../assets/images/headerall.jpg', // Ensure this path is correct
+                  width: double.infinity,
+                  height: 200.0,
+                  fit: BoxFit.cover,
+                ),
+                Positioned(
+                  left: 18.0,
+                  bottom: 80.0,
+                  child: Text(
+                    'Register ',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
