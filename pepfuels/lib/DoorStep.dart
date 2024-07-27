@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-class Doorstep extends StatelessWidget {
+class DoorStep extends StatelessWidget {
+  const DoorStep({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,16 +22,33 @@ class Doorstep extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Image.asset(
-              '../assets/images/headerall.jpg', // Ensure this path is correct
-              width: double.infinity,
-              height: 200, // Adjust height as needed
-              fit: BoxFit.cover,
+            Stack(
+              children: <Widget>[
+                Image.asset(
+                  '../assets/images/headerall.jpg', // Ensure this path is correct
+                  width: double.infinity,
+                  height: 200, // Adjust height as needed
+                  fit: BoxFit.cover,
+                ),
+                Positioned(
+                  bottom: 75, // Adjust as needed
+                  left: 10, // Adjust as needed
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    // color: Colors.black.withOpacity(0.5), // Semi-transparent background
+                    child: Text(
+                      'Doorstep',
+                      style: TextStyle(
+                        fontSize: 24, // Adjust font size as needed
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white, // Text color
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 20), // Add spacing after the image
-            Container(
-              margin: const EdgeInsets.only(top: 10.0),
-            ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -86,7 +105,7 @@ class Doorstep extends StatelessWidget {
 
 void main() {
   runApp(MaterialApp(
-    home: Doorstep(),
+    home: DoorStep(),
     routes: {
       'jerrycan': (context) => JerryCanPage(), // Define your JerryCanPage here
       'bulkorder': (context) =>
