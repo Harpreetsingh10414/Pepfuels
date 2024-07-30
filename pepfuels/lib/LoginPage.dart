@@ -10,7 +10,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
   String _errorMessage = '';
@@ -21,25 +21,45 @@ class _LoginPageState extends State<LoginPage> {
       _errorMessage = '';
     });
 
-    final response = await http.post(
-      Uri.parse('https://jsonplaceholder.typicode.com/posts'), // Replace with your API URL
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'username': _usernameController.text,
-        'password': _passwordController.text,
-      }),
-    );
+    print('Step 1: Starting login process');
+    print('Email: ${_emailController.text}');
+    print('Password: ${_passwordController.text}');
 
-    if (response.statusCode == 200) {
-      // Assuming a successful login
+    try {
+      print('Step 2: Sending HTTP POST request');
+      final response = await http.post(
+        Uri.parse('http://localhost:5000/api/auth/login'), // Replace with your API URL
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'email': _emailController.text,
+          'password': _passwordController.text,
+        }),
+      );
+
+      print('Step 3: Received response');
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        // Assuming a successful login
+        print('Step 4: Login successful, navigating to home page');
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.pushReplacementNamed(context, 'home'); // Navigate to home page
+      } else {
+        print('Step 4: Login failed, displaying error message');
+        setState(() {
+          _isLoading = false;
+          _errorMessage = 'Login failed. Please try again.';
+        });
+      }
+    } catch (error) {
+      print('Step 5: Error during login');
+      print('Error: $error');
       setState(() {
         _isLoading = false;
-      });
-      Navigator.pushReplacementNamed(context, 'home'); // Navigate to home page
-    } else {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = 'Login failed. Please try again.';
+        _errorMessage = 'An error occurred. Please try again.';
       });
     }
   }
@@ -94,11 +114,11 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   children: <Widget>[
                     TextFormField(
-                      controller: _usernameController,
-                      decoration: InputDecoration(labelText: 'Username'),
+                      controller: _emailController,
+                      decoration: InputDecoration(labelText: 'Email'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your username';
+                          return 'Please enter your email';
                         }
                         return null;
                       },
@@ -120,7 +140,10 @@ class _LoginPageState extends State<LoginPage> {
                         : ElevatedButton(
                             onPressed: () {
                               if (_loginFormKey.currentState?.validate() ?? false) {
+                                print('Step 6: Form validated, calling _login');
                                 _login();
+                              } else {
+                                print('Step 6: Form validation failed');
                               }
                             },
                             child: Text('Login'),
@@ -144,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
