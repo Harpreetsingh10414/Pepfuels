@@ -2,6 +2,7 @@ const express = require('express');
 const connectDB = require('./config/database');
 const { swaggerUi, swaggerSpec } = require('./config/swagger');
 const fuelPrices = require('./mockFuelPrices'); // Correct path to mockFuelPrices
+const cors = require('cors'); // Import the cors package
 require('dotenv').config();
 
 const app = express();
@@ -11,6 +12,13 @@ connectDB();
 
 // Middleware
 app.use(express.json({ extended: false }));
+
+// CORS Configuration
+const corsOptions = {
+  origin: 'http://your-frontend-url.com', // Replace with your frontend URL
+  optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions)); // Use CORS middleware with options
 
 // Swagger route
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
