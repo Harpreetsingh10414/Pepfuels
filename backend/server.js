@@ -29,6 +29,7 @@ app.use('/api/profile', require('./routes/profile'));
 app.use('/api/fuelPrices', require('./routes/fuelPrices'));
 app.use('/api/jerrycanOrders', require('./routes/jerrycanOrders')); // Include the new route
 app.use('/api/bulkOrders', require('./routes/bulkOrders')); // Include the new bulk order route
+app.use('/api/orderTracking', require('./routes/orderTracking'));
 
 // Simple route to fetch users
 app.get('/api/users', async (req, res) => {
