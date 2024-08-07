@@ -38,100 +38,97 @@ class _BulkOrderState extends State<BulkOrder> {
             fit: BoxFit.contain,
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 187, 187, 187),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         automaticallyImplyLeading: false, // To center title without a leading widget
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Image.asset(
-                  '../assets/images/headerall.jpg', // Ensure this path is correct
-                  width: double.infinity,
-                  height: 200, // Adjust height as needed
-                  fit: BoxFit.cover,
-                ),
-                Positioned(
-                  bottom: 75, // Adjust as needed
-                  left: 10, // Adjust as needed
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                    // color: Colors.black.withOpacity(0.5), // Semi-transparent background
-                    child: Text(
+      body: Stack(
+        children: <Widget>[
+          Image.asset(
+            '../assets/images/background-all-img.jpg', // Ensure this path is correct
+            width: double.infinity,
+            height: double.infinity,
+            fit: BoxFit.cover,
+          ),
+          Container(
+            color: Colors.black.withOpacity(0.5), // Overlay shade
+          ),
+          Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
                       'Bulk Order',
                       style: TextStyle(
-                        fontSize: 24, // Adjust font size as needed
+                        fontSize: 40,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white, // Text color
+                        color: Colors.white,
                       ),
                     ),
-                  ),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        'Select Quantity (in liters):',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: DropdownButton<int>(
+                        value: _selectedLiters,
+                        onChanged: (int? newValue) {
+                          if (newValue != null) {
+                            _calculateAmount(newValue);
+                          }
+                        },
+                        items: _generateLitersList()
+                            .map<DropdownMenuItem<int>>((int value) {
+                          return DropdownMenuItem<int>(
+                            value: value,
+                            child: Text('$value Liters'),
+                          );
+                        }).toList(),
+                        style: TextStyle(color: Colors.white), // Dropdown text color
+                        dropdownColor: Colors.black, // Dropdown background color
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        'Total Amount: $_totalAmount Rs',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ElevatedButton(
+                        onPressed: _totalAmount > 0
+                            ? () {
+                                Navigator.pushNamed(context, 'payment');
+                              }
+                            : null,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0), // Adjust padding as needed
+                          child: Text('Proceed to Payment'),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(double.infinity, 50), // Make button take full width
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(height: 20), // Add spacing after the image
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text(
-                      'Select Quantity (in liters):',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: DropdownButton<int>(
-                      value: _selectedLiters,
-                      onChanged: (int? newValue) {
-                        if (newValue != null) {
-                          _calculateAmount(newValue);
-                        }
-                      },
-                      items: _generateLitersList()
-                          .map<DropdownMenuItem<int>>((int value) {
-                        return DropdownMenuItem<int>(
-                          value: value,
-                          child: Text('$value Liters'),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      'Total Amount: $_totalAmount Rs',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ElevatedButton(
-                      onPressed: _totalAmount > 0
-                          ? () {
-                              Navigator.pushNamed(context, 'payment');
-                            }
-                          : null,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0), // Adjust padding as needed
-                        child: Text('Proceed to Payment'),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(double.infinity, 50), // Make button take full width
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -15,7 +15,7 @@ class _CommonLayoutState extends State<CommonLayout> {
     if (index != widget.currentIndex) {
       switch (index) {
         case 0:
-          Navigator.pushReplacementNamed(context, '/');
+          Navigator.pushReplacementNamed(context, 'fuel');
           break;
         case 1:
           Navigator.pushReplacementNamed(context, 'jerrycan');
