@@ -54,12 +54,12 @@ class _FuelState extends State<Fuel> {
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.pushNamed(context, 'jerrycan');
+                        Navigator.pushNamed(context, 'doorstep');
                       },
                       icon: Icon(Icons.local_gas_station),
                       label: Padding(
                         padding: const EdgeInsets.all(20.0), // Adjust padding as needed
-                        child: Text('Jerry Can'),
+                        child: Text('Fuel at Doorstep'),
                       ),
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity, 50), // Make button take full width
@@ -71,12 +71,12 @@ class _FuelState extends State<Fuel> {
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.pushNamed(context, 'bulkorder');
+                        Navigator.pushNamed(context, '#');
                       },
-                      icon: Icon(Icons.shopping_cart),
+                      icon: Icon(Icons.local_gas_station),
                       label: Padding(
                         padding: const EdgeInsets.all(20.0), // Adjust padding as needed
-                        child: Text('Bulk Order'),
+                        child: Text('Fuel at Ro'),
                       ),
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity, 50), // Make button take full width

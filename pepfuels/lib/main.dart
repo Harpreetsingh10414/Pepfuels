@@ -7,6 +7,7 @@ import 'package:pepfuels/JerryCan.dart' as jerrycan;
 import 'package:pepfuels/BulkOrder.dart' as bulkorder;
 import 'package:pepfuels/ProfilePage.dart' as profile;
 import 'package:pepfuels/Fuel.dart' as fuel; // Import FuelPage
+import 'package:pepfuels/PumpLocator.dart' as pumplocator; // Updated import
 import 'CommonLayout.dart'; // Import the CommonLayout widget
 
 void main() {
@@ -33,9 +34,18 @@ class MyApp extends StatelessWidget {
             CommonLayout(child: const bulkorder.BulkOrder(), currentIndex: 2),
         'profile': (context) =>
             CommonLayout(child: const profile.ProfilePage(), currentIndex: 3),
-        'fuel': (context) => fuel.Fuel(),
-        // 'fuel': (context) =>
-        //     CommonLayout(child: const fuel.Fuel(), currentIndex: 4),
+        'fuel': (context) =>
+            CommonLayout(child: const fuel.Fuel(), currentIndex: 0),
+        'pumplocator': (context) {
+          // Retrieve the arguments from the route
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, int>;
+          final selectedLiters = args?['selectedLiters'] ?? 0;
+
+          return CommonLayout(
+            child: pumplocator.PumpLocator(selectedLiters: selectedLiters),
+            currentIndex: 0,
+          );
+        },
       },
     );
   }

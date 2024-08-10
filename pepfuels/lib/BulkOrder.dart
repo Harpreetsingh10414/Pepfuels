@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './Pumplocator.dart'; // Import the PumpLocator page
 
 class BulkOrder extends StatefulWidget {
   const BulkOrder({super.key});
@@ -16,6 +17,17 @@ class _BulkOrderState extends State<BulkOrder> {
       _selectedLiters = liters;
       _totalAmount = liters * 100; // 100rs per liter
     });
+  }
+
+  void _navigateToPumpLocator() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PumpLocator(
+          selectedLiters: _selectedLiters,
+        ),
+      ),
+    );
   }
 
   List<int> _generateLitersList() {
@@ -109,14 +121,10 @@ class _BulkOrderState extends State<BulkOrder> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: ElevatedButton(
-                        onPressed: _totalAmount > 0
-                            ? () {
-                                Navigator.pushNamed(context, 'payment');
-                              }
-                            : null,
+                        onPressed: _totalAmount > 0 ? _navigateToPumpLocator : null,
                         child: Padding(
                           padding: const EdgeInsets.all(20.0), // Adjust padding as needed
-                          child: Text('Proceed to Payment'),
+                          child: Text('Proceed to Pump Locator'),
                         ),
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size(double.infinity, 50), // Make button take full width

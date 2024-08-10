@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import './Pumplocator.dart'; // Import the PumpLocator page
 
 class JerryCan extends StatefulWidget {
-  const JerryCan({super.key});
+  const JerryCan({Key? key}) : super(key: key);
 
   @override
   _JerryCanState createState() => _JerryCanState();
@@ -14,8 +15,19 @@ class _JerryCanState extends State<JerryCan> {
   void _calculateAmount(int liters) {
     setState(() {
       _selectedLiters = liters;
-      _totalAmount = liters * 100; // 100rs per liter
+      _totalAmount = liters * 100; // 100 Rs per liter
     });
+  }
+
+  void _navigateToPumpLocator() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PumpLocator(
+          selectedLiters: _selectedLiters,
+        ),
+      ),
+    );
   }
 
   @override
@@ -76,29 +88,24 @@ class _JerryCanState extends State<JerryCan> {
                         _buildQuantityButton(10),
                         _buildQuantityButton(15),
                         _buildQuantityButton(20),
-                     
                       ],
                     ),
                     SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Text(
-                        'Total Amount: $_totalAmount Rs',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.all(15.0),
+                    //   child: Text(
+                    //     'Total Amount: $_totalAmount Rs',
+                    //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                    //   ),
+                    // ),
                     SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: ElevatedButton(
-                        onPressed: _totalAmount > 0
-                            ? () {
-                                Navigator.pushNamed(context, 'payment');
-                              }
-                            : null,
+                        onPressed: _totalAmount > 0 ? _navigateToPumpLocator : null,
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
-                          child: Text('Proceed to Payment'),
+                          child: Text('Proceed to Pump Locator'),
                         ),
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size(double.infinity, 50), // Make button take full width
@@ -128,30 +135,6 @@ class _JerryCanState extends State<JerryCan> {
         style: ElevatedButton.styleFrom(
           minimumSize: Size(double.infinity, 50),
         ),
-      ),
-    );
-  }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: JerryCan(),
-    routes: {
-      'payment': (context) => PaymentPage(), // Define your PaymentPage here
-    },
-  ));
-}
-
-// Placeholder for PaymentPage, replace with your actual PaymentPage implementation
-class PaymentPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Payment Page'),
-      ),
-      body: Center(
-        child: Text('Payment Gateway Integration Here'),
       ),
     );
   }

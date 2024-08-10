@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
           _isLoading = false;
         });
 
-        Navigator.pushReplacementNamed(context, 'profile'); // Navigate to profile page
+        Navigator.pushReplacementNamed(context, 'fuel'); // Navigate to profile page
       } else {
         final responseBody = json.decode(response.body);
         setState(() {
@@ -86,9 +86,9 @@ class _LoginPageState extends State<LoginPage> {
             color: Colors.black.withOpacity(0.5), // Overlay shade
           ),
           Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Form(
                   key: _loginFormKey,
                   child: Column(
@@ -140,9 +140,6 @@ class _LoginPageState extends State<LoginPage> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your password';
                           }
-                          if (value.length < 6) {
-                            return 'Password must be at least 6 characters long';
-                          }
                           return null;
                         },
                       ),
@@ -182,29 +179,5 @@ class _LoginPageState extends State<LoginPage> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: LoginPage(),
-    routes: {
-      'profile': (context) => ProfilePage(), // Define your ProfilePage here
-    },
-  ));
-}
-
-// Placeholder for ProfilePage, replace with your actual ProfilePage implementation
-class ProfilePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Profile Page'),
-      ),
-      body: Center(
-        child: Text('Welcome to the Profile Page'),
-      ),
-    );
   }
 }

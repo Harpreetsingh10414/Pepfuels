@@ -256,27 +256,3 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 }
-
-void main() {
-  runApp(MaterialApp(
-    home: RegisterPage(),
-    routes: {
-      'login': (context) => LoginPage(), // Define your LoginPage here
-    },
-  ));
-}
-
-// Placeholder for LoginPage, replace with your actual LoginPage implementation
-class LoginPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Login Page'),
-      ),
-      body: Center(
-        child: Text('Login Page Content'),
-      ),
-    );
-  }
-}

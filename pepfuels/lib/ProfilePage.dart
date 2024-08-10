@@ -40,7 +40,10 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       final response = await http.get(
         Uri.parse('http://localhost:5000/api/profile'), // Update with your backend URL
-        headers: {'Authorization': 'Bearer $token'},
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json', // Ensure Content-Type is set
+        },
       );
 
       print('Response status: ${response.statusCode}'); // Debugging line
@@ -141,20 +144,20 @@ class _ProfilePageState extends State<ProfilePage> {
                           // Navigate to Edit Profile Page
                         },
                       ),
-                      ListTile(
-                        leading: Icon(Icons.settings, color: Colors.white),
-                        title: Text('Settings', style: TextStyle(color: Colors.white)),
-                        onTap: () {
-                          // Navigate to Settings Page
-                        },
-                      ),
+                      // ListTile(
+                      //   leading: Icon(Icons.settings, color: Colors.white),
+                      //   title: Text('Settings', style: TextStyle(color: Colors.white)),
+                      //   onTap: () {
+                      //     // Navigate to Settings Page
+                      //   },
+                      // ),
                       ListTile(
                         leading: Icon(Icons.logout, color: Colors.white),
                         title: Text('Logout', style: TextStyle(color: Colors.white)),
                         onTap: () async {
                           final prefs = await SharedPreferences.getInstance();
                           await prefs.remove('jwtToken');
-                          Navigator.pushReplacementNamed(context, '/login');
+                          Navigator.pushReplacementNamed(context, '/');
                         },
                       ),
                       if (_errorMessage.isNotEmpty)
