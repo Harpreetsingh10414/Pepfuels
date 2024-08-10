@@ -7,8 +7,17 @@ const jwt = require('jsonwebtoken');
  * @param {Function} next - Express next middleware function.
  */
 const authMiddleware = (req, res, next) => {
-  // Get token from headers
-  const token = req.header('x-auth-token');
+  // Get token from x-auth-token or Authorization headers
+  let token = req.header('x-auth-token');
+  
+  // If token is not provided in x-auth-token, check Authorization header
+  if (!token) {
+    const authHeader = req.header('Authorization');
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];  // Extract token from Bearer scheme
+    }
+  }
+
   console.log('Auth Middleware: Token received:', token);
 
   // Check if no token
