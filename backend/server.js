@@ -15,8 +15,11 @@ app.use(express.json({ extended: false }));
 
 // CORS Configuration
 const corsOptions = {
-  origin: 'http://your-frontend-url.com', // Replace with your frontend URL
-  optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
+  origin: 'http://localhost:63818', // Allow requests from your frontend URL
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: ['Content-Type', 'Authorization'] // Add any other headers you require
 };
 app.use(cors(corsOptions)); // Use CORS middleware with options
 

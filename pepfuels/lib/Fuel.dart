@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class Fuel extends StatefulWidget {
+  const Fuel({super.key});
 
+  @override
+  _FuelState createState() => _FuelState();
+}
+
+class _FuelState extends State<Fuel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +42,7 @@ class HomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    'Home',
+                    'Fuel',
                     style: TextStyle(
                       fontSize: 40,
                       fontWeight: FontWeight.bold,
@@ -49,12 +54,12 @@ class HomePage extends StatelessWidget {
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.pushNamed(context, 'login');
+                        Navigator.pushNamed(context, 'doorstep');
                       },
-                      icon: Icon(Icons.login),
+                      icon: Icon(Icons.local_gas_station),
                       label: Padding(
                         padding: const EdgeInsets.all(20.0), // Adjust padding as needed
-                        child: Text('Go to Login Page'),
+                        child: Text('Fuel at Doorstep'),
                       ),
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity, 50), // Make button take full width
@@ -66,12 +71,12 @@ class HomePage extends StatelessWidget {
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.pushNamed(context, 'register');
+                        Navigator.pushNamed(context, '#');
                       },
-                      icon: Icon(Icons.app_registration),
+                      icon: Icon(Icons.local_gas_station),
                       label: Padding(
                         padding: const EdgeInsets.all(20.0), // Adjust padding as needed
-                        child: Text('Go to Register Page'),
+                        child: Text('Fuel at Ro'),
                       ),
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity, 50), // Make button take full width
@@ -90,39 +95,39 @@ class HomePage extends StatelessWidget {
 
 void main() {
   runApp(MaterialApp(
-    home: HomePage(),
+    home: Fuel(),
     routes: {
-      'login': (context) => LoginPage(), // Define your LoginPage here
-      'register': (context) => RegisterPage(), // Define your RegisterPage here
+      'jerrycan': (context) => JerryCanPage(), // Define your JerryCanPage here
+      'bulkorder': (context) => BulkOrderPage(), // Define your BulkOrderPage here
     },
   ));
 }
 
-// Placeholder for LoginPage, replace with your actual LoginPage implementation
-class LoginPage extends StatelessWidget {
+// Placeholder for JerryCanPage, replace with your actual JerryCanPage implementation
+class JerryCanPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login Page'),
+        title: Text('Jerry Can'),
       ),
       body: Center(
-        child: Text('Login Page Content'),
+        child: Text('Jerry Can Page Content'),
       ),
     );
   }
 }
 
-// Placeholder for RegisterPage, replace with your actual RegisterPage implementation
-class RegisterPage extends StatelessWidget {
+// Placeholder for BulkOrderPage, replace with your actual BulkOrderPage implementation
+class BulkOrderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register Page'),
+        title: Text('Bulk Order'),
       ),
       body: Center(
-        child: Text('Register Page Content'),
+        child: Text('Bulk Order Page Content'),
       ),
     );
   }
