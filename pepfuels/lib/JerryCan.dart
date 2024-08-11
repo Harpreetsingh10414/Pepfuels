@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import './Pumplocator.dart'; // Import the PumpLocator page
 
 class JerryCan extends StatefulWidget {
-  const JerryCan({super.key});
+  const JerryCan({Key? key}) : super(key: key);
 
   @override
   _JerryCanState createState() => _JerryCanState();
@@ -14,8 +15,19 @@ class _JerryCanState extends State<JerryCan> {
   void _calculateAmount(int liters) {
     setState(() {
       _selectedLiters = liters;
-      _totalAmount = liters * 100; // 100rs per liter
+      _totalAmount = liters * 100; // 100 Rs per liter
     });
+  }
+
+  void _navigateToPumpLocator() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PumpLocator(
+          selectedLiters: _selectedLiters,
+        ),
+      ),
+    );
   }
 
   @override
@@ -30,180 +42,99 @@ class _JerryCanState extends State<JerryCan> {
             fit: BoxFit.contain,
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 187, 187, 187),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         automaticallyImplyLeading: false, // To center title without a leading widget
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Image.asset(
-                  '../assets/images/headerall.jpg', // Ensure this path is correct
-                  width: double.infinity,
-                  height: 200, // Adjust height as needed
-                  fit: BoxFit.cover,
-                ),
-                Positioned(
-                  bottom: 75, // Adjust as needed
-                  left: 10, // Adjust as needed
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                    // color: Colors.black.withOpacity(0.5), // Semi-transparent background
-                    child: Text(
+      body: Stack(
+        children: <Widget>[
+          Image.asset(
+            '../assets/images/background-all-img.jpg', // Ensure this path is correct
+            width: double.infinity,
+            height: double.infinity,
+            fit: BoxFit.cover,
+          ),
+          Container(
+            color: Colors.black.withOpacity(0.5), // Overlay shade
+          ),
+          Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
                       'Jerry Can',
                       style: TextStyle(
-                        fontSize: 24, // Adjust font size as needed
+                        fontSize: 40,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white, // Text color
+                        color: Colors.white,
                       ),
                     ),
-                  ),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        'Select Quantity (in liters):',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Wrap(
+                      spacing: 20,
+                      children: <Widget>[
+                        _buildQuantityButton(5),
+                        _buildQuantityButton(10),
+                        _buildQuantityButton(15),
+                        _buildQuantityButton(20),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    // Padding(
+                    //   padding: const EdgeInsets.all(15.0),
+                    //   child: Text(
+                    //     'Total Amount: $_totalAmount Rs',
+                    //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                    //   ),
+                    // ),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ElevatedButton(
+                        onPressed: _totalAmount > 0 ? _navigateToPumpLocator : null,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text('Proceed to Pump Locator'),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(double.infinity, 50), // Make button take full width
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(height: 20), // Add spacing after the image
-            Container(
-              margin: const EdgeInsets.only(top: 10.0),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text(
-                      'Select Quantity (in liters):',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Wrap(
-                    spacing: 20,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: ElevatedButton.icon(
-                          onPressed: () => _calculateAmount(5),
-                          icon: Icon(Icons.local_gas_station),
-                          label: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text('5 Liters'),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: ElevatedButton.icon(
-                          onPressed: () => _calculateAmount(10),
-                          icon: Icon(Icons.local_gas_station),
-                          label: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text('10 Liters'),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: ElevatedButton.icon(
-                          onPressed: () => _calculateAmount(15),
-                          icon: Icon(Icons.local_gas_station),
-                          label: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text('15 Liters'),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: ElevatedButton.icon(
-                          onPressed: () => _calculateAmount(20),
-                          icon: Icon(Icons.local_gas_station),
-                          label: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text('20 Liters'),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: ElevatedButton.icon(
-                          onPressed: () => _calculateAmount(25),
-                          icon: Icon(Icons.local_gas_station),
-                          label: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text('25 Liters'),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: ElevatedButton.icon(
-                          onPressed: () => _calculateAmount(30),
-                          icon: Icon(Icons.local_gas_station),
-                          label: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text('30 Liters'),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Text(
-                      'Total Amount: $_totalAmount Rs',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ElevatedButton(
-                      onPressed: _totalAmount > 0
-                          ? () {
-                              Navigator.pushNamed(context, 'payment');
-                            }
-                          : null,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text('Proceed to Payment'),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(double.infinity, 50), // Make button take full width
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-}
 
-void main() {
-  runApp(MaterialApp(
-    home: JerryCan(),
-    routes: {
-      'payment': (context) => PaymentPage(), // Define your PaymentPage here
-    },
-  ));
-}
-
-// Placeholder for PaymentPage, replace with your actual PaymentPage implementation
-class PaymentPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Payment Page'),
-      ),
-      body: Center(
-        child: Text('Payment Gateway Integration Here'),
+  Widget _buildQuantityButton(int liters) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: ElevatedButton.icon(
+        onPressed: () => _calculateAmount(liters),
+        icon: Icon(Icons.local_gas_station),
+        label: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Text('$liters Liters'),
+        ),
+        style: ElevatedButton.styleFrom(
+          minimumSize: Size(double.infinity, 50),
+        ),
       ),
     );
   }

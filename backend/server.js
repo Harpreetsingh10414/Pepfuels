@@ -2,7 +2,9 @@ const express = require('express');
 const connectDB = require('./config/database');
 const { swaggerUi, swaggerSpec } = require('./config/swagger');
 const fuelPrices = require('./mockFuelPrices'); // Correct path to mockFuelPrices
-const petrolPumpsRoutes = require('./routes/petrolPumps');
+
+const petrolPumps = require('./routes/petrolPump');
+
 const cors = require('cors'); // Import the cors package
 require('dotenv').config();
 
@@ -16,8 +18,11 @@ app.use(express.json({ extended: false }));
 
 // CORS Configuration
 const corsOptions = {
-  origin: 'http://your-frontend-url.com', // Replace with your frontend URL
-  optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
+  origin: 'http://localhost:55140', // Allow requests from your frontend URL
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: ['Content-Type', 'Authorization'] // Add any other headers you require
 };
 app.use(cors(corsOptions)); // Use CORS middleware with options
 
@@ -31,7 +36,7 @@ app.use('/api/fuelPrices', require('./routes/fuelPrices'));
 app.use('/api/jerrycanOrders', require('./routes/jerrycanOrders')); // Include the new route
 app.use('/api/bulkOrders', require('./routes/bulkOrders')); // Include the new bulk order route
 app.use('/api/orderTracking', require('./routes/orderTracking'));
-app.use('/api/petrolPumps', petrolPumpsRoutes);
+app.use('/api/petrolPumps', petrolPumps);
 
 // Simple route to fetch users
 app.get('/api/users', async (req, res) => {
