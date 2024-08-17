@@ -28,7 +28,7 @@ class _PumpLocatorState extends State<PumpLocator> {
       appBar: AppBar(
         title: Center(
           child: Image.asset(
-            'assets/images/logo.png', // Ensure this path is correct and matches your pubspec.yaml
+            '../assets/images/logo.png', // Ensure this path is correct and matches your pubspec.yaml
             width: 200,
             height: 50,
             fit: BoxFit.contain,
