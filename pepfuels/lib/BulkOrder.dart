@@ -20,15 +20,15 @@ class _BulkOrderState extends State<BulkOrder> {
   }
 
   void _navigateToPumpLocator() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PumpLocator(
-          selectedLiters: _selectedLiters,
-        ),
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => PumpLocator(
+        selectedLiters: _selectedLiters,
       ),
-    );
-  }
+    ),
+  );
+}
 
   List<int> _generateLitersList() {
     List<int> litersList = [0]; // Add 0 as the default option

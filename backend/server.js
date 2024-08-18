@@ -2,7 +2,7 @@ const express = require('express');
 const connectDB = require('./config/database');
 const { swaggerUi, swaggerSpec } = require('./config/swagger');
 const fuelPrices = require('./mockFuelPrices'); // Correct path to mockFuelPrices
-
+const googlePlaces = require('./routes/googlePlaces');
 const petrolPumps = require('./routes/petrolPump');
 
 const cors = require('cors'); // Import the cors package
@@ -18,7 +18,7 @@ app.use(express.json({ extended: false }));
 
 // CORS Configuration
 const corsOptions = {
-  origin: 'http://localhost:55691', // Allow requests from your frontend URL
+  origin: '*', // Allow requests from your frontend URL
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
@@ -37,6 +37,7 @@ app.use('/api/jerrycanOrders', require('./routes/jerrycanOrders')); // Include t
 app.use('/api/bulkOrders', require('./routes/bulkOrders')); // Include the new bulk order route
 app.use('/api/orderTracking', require('./routes/orderTracking'));
 app.use('/api/petrolPumps', petrolPumps);
+app.use('/api/google-places', googlePlaces);
 
 // Simple route to fetch users
 app.get('/api/users', async (req, res) => {
