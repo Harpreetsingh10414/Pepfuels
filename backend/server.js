@@ -18,7 +18,7 @@ app.use(express.json({ extended: false }));
 
 // CORS Configuration
 const corsOptions = {
-  origin: '*', // Allow requests from your frontend URL
+  origin: 'http://localhost:55229', // Allow requests from your frontend URL
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
