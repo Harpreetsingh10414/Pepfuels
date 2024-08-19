@@ -6,9 +6,10 @@ import 'package:pepfuels/DoorStep.dart' as doorstep;
 import 'package:pepfuels/JerryCan.dart' as jerrycan;
 import 'package:pepfuels/BulkOrder.dart' as bulkorder;
 import 'package:pepfuels/ProfilePage.dart' as profile;
-import 'package:pepfuels/Fuel.dart' as fuel; // Import FuelPage
-import 'package:pepfuels/PumpLocator.dart' as pumplocator; // Updated import
-import 'CommonLayout.dart'; // Import the CommonLayout widget
+import 'package:pepfuels/Fuel.dart' as fuel;
+import 'package:pepfuels/PumpLocator.dart' as pumplocator;
+import 'package:pepfuels/OrderId.dart' as orderid; // Import OrderId page
+import 'CommonLayout.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,12 +38,21 @@ class MyApp extends StatelessWidget {
         'fuel': (context) =>
             CommonLayout(child: const fuel.Fuel(), currentIndex: 0),
         'pumplocator': (context) {
-          // Retrieve the arguments from the route
           final args = ModalRoute.of(context)?.settings.arguments as Map<String, int>;
           final selectedLiters = args?['selectedLiters'] ?? 0;
 
           return CommonLayout(
             child: pumplocator.PumpLocator(selectedLiters: selectedLiters),
+            currentIndex: 0,
+          );
+        },
+        'orderid': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+          final selectedLiters = args['selectedLiters'] ?? 0;
+          final fuelType = args['fuelType'] ?? 'petrol';
+          
+          return CommonLayout(
+            child: orderid.OrderId(selectedLiters: selectedLiters, fuelType: fuelType),
             currentIndex: 0,
           );
         },
