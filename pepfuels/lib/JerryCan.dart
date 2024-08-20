@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pepfuels/OrderId.dart'; // Import the OrderId page
+import './Pumplocator.dart'; // Import the PumpLocator page
 
 class JerryCan extends StatefulWidget {
   const JerryCan({Key? key}) : super(key: key);
@@ -11,7 +11,6 @@ class JerryCan extends StatefulWidget {
 class _JerryCanState extends State<JerryCan> {
   int _selectedLiters = 0;
   int _totalAmount = 0;
-  String _fuelType = 'Petrol'; // Default fuel type
 
   void _calculateAmount(int liters) {
     setState(() {
@@ -20,14 +19,14 @@ class _JerryCanState extends State<JerryCan> {
     });
   }
 
-  void _navigateToOrderId() {
-    Navigator.pushNamed(
+  void _navigateToPumpLocator() {
+    Navigator.push(
       context,
-      'orderid',
-      arguments: {
-        'selectedLiters': _selectedLiters,
-        'fuelType': _fuelType,
-      },
+      MaterialPageRoute(
+        builder: (context) => PumpLocator(
+          selectedLiters: _selectedLiters,
+        ),
+      ),
     );
   }
 
@@ -92,13 +91,21 @@ class _JerryCanState extends State<JerryCan> {
                       ],
                     ),
                     SizedBox(height: 20),
+                    // Padding(
+                    //   padding: const EdgeInsets.all(15.0),
+                    //   child: Text(
+                    //     'Total Amount: $_totalAmount Rs',
+                    //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                    //   ),
+                    // ),
+                    SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: ElevatedButton(
-                        onPressed: _totalAmount > 0 ? _navigateToOrderId : null,
+                        onPressed: _totalAmount > 0 ? _navigateToPumpLocator : null,
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
-                          child: Text('Proceed to Order'),
+                          child: Text('Proceed to Pump Locator'),
                         ),
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size(double.infinity, 50), // Make button take full width

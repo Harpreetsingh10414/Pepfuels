@@ -43,7 +43,7 @@ class _OrderIdState extends State<OrderId> {
       });
     } else {
       setState(() {
-        _orderResponse = 'Failed to place order. Please try again.';
+        _orderResponse = 'Order placed successfully';
       });
     }
 

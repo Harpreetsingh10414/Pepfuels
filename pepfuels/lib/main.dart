@@ -8,7 +8,8 @@ import 'package:pepfuels/BulkOrder.dart' as bulkorder;
 import 'package:pepfuels/ProfilePage.dart' as profile;
 import 'package:pepfuels/Fuel.dart' as fuel;
 import 'package:pepfuels/PumpLocator.dart' as pumplocator;
-import 'package:pepfuels/OrderId.dart' as orderid; // Import OrderId page
+import 'package:pepfuels/OrderId.dart' as orderid;
+import 'SubmitFormPage.dart'; // Import SubmitFormPage
 import 'CommonLayout.dart';
 
 void main() {
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
             currentIndex: 0,
           );
         },
+        'submitForm': (context) => const SubmitFormPage(), // Add SubmitFormPage route
       },
     );
   }
