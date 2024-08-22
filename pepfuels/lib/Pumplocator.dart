@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'dart:html' as html;
+import 'package:geolocator/geolocator.dart';
 import 'petrol_pump_page.dart'; // Import the PetrolPumpPage class
 
 class PumpLocator extends StatefulWidget {
@@ -40,35 +40,62 @@ class _PumpLocatorState extends State<PumpLocator> {
   }
 
   Future<void> _fetchCurrentLocation() async {
-    try {
-      print('Fetching current location...');
-      html.window.navigator.geolocation.getCurrentPosition().then((position) {
-        setState(() {
-          currentLocation = LatLng(
-            position.coords?.latitude?.toDouble() ?? 0.0,
-            position.coords?.longitude?.toDouble() ?? 0.0,
-          );
-          markers.add(
-            Marker(
-              markerId: MarkerId("currentLocation"),
-              position: currentLocation!,
-              infoWindow: InfoWindow(title: "You are here"),
-            ),
-          );
-          print('Current location: $currentLocation');
-          if (mapController != null) {
-            mapController!.animateCamera(
-              CameraUpdate.newLatLngZoom(currentLocation!, 14),
-            );
-          }
-        });
-      }).catchError((error) {
-        print('Error fetching location: $error');
-      });
-    } catch (e) {
-      print('Error: $e');
+  try {
+    print('Fetching current location...');
+
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Check if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      print('Location services are disabled.');
+      return;
     }
+
+    // Check for location permissions.
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        print('Location permissions are denied.');
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      print('Location permissions are permanently denied.');
+      return;
+    }
+
+    // Get the current location.
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    setState(() {
+      currentLocation = LatLng(
+        position.latitude,
+        position.longitude,
+      );
+      markers.add(
+        Marker(
+          markerId: MarkerId("currentLocation"),
+          position: currentLocation!,
+          infoWindow: InfoWindow(title: "You are here"),
+        ),
+      );
+      print('Current location: $currentLocation');
+      if (mapController != null) {
+        mapController!.animateCamera(
+          CameraUpdate.newLatLngZoom(currentLocation!, 14),
+        );
+      }
+    });
+  } catch (e) {
+    print('Error: $e');
   }
+}
+
 
   Future<void> _fetchLocationsFromBackend() async {
     print('Fetching locations from backend...');
