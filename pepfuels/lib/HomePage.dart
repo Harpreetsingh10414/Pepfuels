@@ -6,6 +6,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Center(
           child: Image.asset(
@@ -17,64 +18,80 @@ class HomePage extends StatelessWidget {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        automaticallyImplyLeading: false, // To center title without a leading widget
+        automaticallyImplyLeading: false,
       ),
       body: Stack(
         children: <Widget>[
           Image.asset(
-            '../assets/images/background-all-img.jpg', // Ensure this path is correct
+            '../assets/images/background-img-for-all-work.webp', // Your background image path
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,
           ),
-          Container(
-            color: Colors.black.withOpacity(0.5), // Overlay shade
-          ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              margin: EdgeInsets.only(bottom: 30, left: 16, right: 16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30.0),
+                gradient: LinearGradient(
+                  colors: [Colors.blue, Colors.purple],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 5,
+                    blurRadius: 10,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.local_shipping,
+                    size: 50,
+                    color: Colors.white,
+                  ),
+                  SizedBox(height: 10),
                   Text(
-                    'Home',
+                    'Express Delivery',
                     style: TextStyle(
-                      fontSize: 40,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(height: 20), // Add spacing after the heading
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.pushNamed(context, 'login');
-                      },
-                      icon: Icon(Icons.login),
-                      label: Padding(
-                        padding: const EdgeInsets.all(20.0), // Adjust padding as needed
-                        child: Text('Go to Login Page'),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(double.infinity, 50), // Make button take full width
-                      ),
+                  SizedBox(height: 10),
+                  Text(
+                    'We provide a special delivery feature, which is fast delivery. With us you can also enjoy other types of shipping.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
                     ),
                   ),
-                  SizedBox(height: 10), // Add spacing between buttons
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.pushNamed(context, 'register');
-                      },
-                      icon: Icon(Icons.app_registration),
-                      label: Padding(
-                        padding: const EdgeInsets.all(20.0), // Adjust padding as needed
-                        child: Text('Go to Register Page'),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, 'login');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(double.infinity, 50), // Make button take full width
+                      backgroundColor: Colors.white,
+                    ),
+                    child: Text(
+                      'Get Started',
+                      style: TextStyle(
+                        color: Colors.blueAccent,
+                        fontSize: 18,
                       ),
                     ),
                   ),
@@ -92,13 +109,12 @@ void main() {
   runApp(MaterialApp(
     home: HomePage(),
     routes: {
-      'login': (context) => LoginPage(), // Define your LoginPage here
-      'register': (context) => RegisterPage(), // Define your RegisterPage here
+      'login': (context) => LoginPage(),
+      'register': (context) => RegisterPage(),
     },
   ));
 }
 
-// Placeholder for LoginPage, replace with your actual LoginPage implementation
 class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -113,7 +129,6 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-// Placeholder for RegisterPage, replace with your actual RegisterPage implementation
 class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
           _isLoading = false;
         });
 
-        Navigator.pushReplacementNamed(context, 'fuel'); // Navigate to profile page
+        Navigator.pushReplacementNamed(context, 'fuel'); // Navigate to the fuel page
       } else {
         final responseBody = json.decode(response.body);
         setState(() {
@@ -65,107 +65,131 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Image.asset(
-          '../assets/images/logo.png', // Ensure this path is correct
-          height: 50,
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
       body: Stack(
         children: <Widget>[
           Image.asset(
-            '../assets/images/background-all-img.jpg', // Ensure this path is correct
+            '../assets/images/background-loginn-pg.jpg', // Replace with your background image path
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,
           ),
           Container(
-            color: Colors.black.withOpacity(0.5), // Overlay shade
+            color: Color.fromARGB(0, 255, 255, 255).withOpacity(0.5), // Overlay shade
           ),
           Center(
             child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                  key: _loginFormKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        'Login',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(),
-                          floatingLabelBehavior: FloatingLabelBehavior.never,
-                          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                            return 'Please enter a valid email address';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      TextFormField(
-                        controller: _passwordController,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(),
-                          floatingLabelBehavior: FloatingLabelBehavior.never,
-                          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                        ),
-                        obscureText: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      _isLoading
-                          ? CircularProgressIndicator()
-                          : ElevatedButton(
-                              onPressed: _login,
-                              child: Text('Login'),
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.blue,
-                                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                                textStyle: TextStyle(fontSize: 18),
-                              ),
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Image.asset(
+                    '../assets/images/logo.png', // Ensure this path is correct
+                    height: 100,
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Login Now',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Form(
+                    key: _loginFormKey,
+                    child: Column(
+                      children: <Widget>[
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            labelText: 'Email address',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30.0),
                             ),
-                      if (_errorMessage.isNotEmpty) ...[
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 20),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your email';
+                            }
+                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                                .hasMatch(value)) {
+                              return 'Please enter a valid email address';
+                            }
+                            return null;
+                          },
+                        ),
                         SizedBox(height: 20),
-                        Text(
-                          _errorMessage,
-                          style: TextStyle(color: Colors.red),
+                        TextFormField(
+                          controller: _passwordController,
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 20),
+                          ),
+                          obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 30),
+                        _isLoading
+                            ? CircularProgressIndicator()
+                            : ElevatedButton(
+                                onPressed: _login,
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 15, horizontal: 80),
+                                  backgroundColor: Colors.orange,
+                                ),
+                                child: Text(
+                                  'LOGIN',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                        if (_errorMessage.isNotEmpty) ...[
+                          SizedBox(height: 20),
+                          Text(
+                            _errorMessage,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ],
+                        SizedBox(height: 20),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, 'register');
+                          },
+                          child: Text(
+                            'New user? Register here',
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
                         ),
                       ],
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ),

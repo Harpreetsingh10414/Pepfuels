@@ -12,82 +12,148 @@ class _FuelState extends State<Fuel> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Image.asset(
-            '../assets/images/logo.png', // Ensure this path is correct
-            width: 200,
-            height: 50,
-            fit: BoxFit.contain,
-          ),
+        backgroundColor: Color(0xFFD3D3D3), // Light gray color for the header
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              '../assets/images/logo.png', // Replace with your logo image path
+              height: 50, // Adjust the height of the logo as needed
+            ),
+          ],
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        automaticallyImplyLeading: false, // To center title without a leading widget
+        centerTitle: true,
       ),
       body: Stack(
         children: <Widget>[
+          // Background image
           Image.asset(
-            '../assets/images/background-all-img.jpg', // Ensure this path is correct
+            '../assets/images/background-img-for-all-internal.jpg', // Adjust path as needed
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,
           ),
           Container(
-            color: Colors.black.withOpacity(0.5), // Overlay shade
+            color: Colors.black.withOpacity(0.3), // Adjust overlay for better text visibility
           ),
           Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'Fuel',
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Gradient content container
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color.fromARGB(148, 217, 0, 255),
+                          Color.fromARGB(144, 243, 229, 245)
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Say goodbye to a fuel station!',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "We're an on-demand fuel delivery application that allows users to order fuel for their vehicle anytime, anywhere.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 30), // Space between text and buttons
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            // Fuel at Doorstep Button
+                            _buildGradientSquareButton(
+                              icon: Icons.local_gas_station,
+                              label: 'Doorstep',
+                              onPressed: () {
+                                Navigator.pushNamed(context, 'doorstep');
+                              },
+                            ),
+                            // Fuel at Ro Button
+                            _buildGradientSquareButton(
+                              icon: Icons.local_gas_station,
+                              label: 'Outlet',
+                              onPressed: () {
+                                Navigator.pushNamed(context, 'ro');
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 20), // Add spacing after the heading
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.pushNamed(context, 'doorstep');
-                      },
-                      icon: Icon(Icons.local_gas_station),
-                      label: Padding(
-                        padding: const EdgeInsets.all(20.0), // Adjust padding as needed
-                        child: Text('Fuel at Doorstep'),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(double.infinity, 50), // Make button take full width
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10), // Add spacing between buttons
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '#');
-                      },
-                      icon: Icon(Icons.local_gas_station),
-                      label: Padding(
-                        padding: const EdgeInsets.all(20.0), // Adjust padding as needed
-                        child: Text('Fuel at Ro'),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(double.infinity, 50), // Make button take full width
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildGradientSquareButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [const Color.fromARGB(255, 255, 255, 255), const Color.fromARGB(255, 255, 255, 255)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.all(20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          minimumSize: Size(120, 120), // Ensure square shape
+          backgroundColor: Colors.transparent, // Transparent background for gradient
+          shadowColor: Colors.transparent, // No shadow
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: Colors.black,
+              size: 40,
+            ),
+            SizedBox(height: 10),
+            Text(
+              label,
+              style: TextStyle(fontSize: 16, color: Colors.black),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -97,37 +163,35 @@ void main() {
   runApp(MaterialApp(
     home: Fuel(),
     routes: {
-      'jerrycan': (context) => JerryCanPage(), // Define your JerryCanPage here
-      'bulkorder': (context) => BulkOrderPage(), // Define your BulkOrderPage here
+      'doorstep': (context) => DoorstepPage(),
+      'ro': (context) => RoPage(),
     },
   ));
 }
 
-// Placeholder for JerryCanPage, replace with your actual JerryCanPage implementation
-class JerryCanPage extends StatelessWidget {
+class DoorstepPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Jerry Can'),
+        title: Text('Fuel at Doorstep'),
       ),
       body: Center(
-        child: Text('Jerry Can Page Content'),
+        child: Text('Fuel at Doorstep Page Content'),
       ),
     );
   }
 }
 
-// Placeholder for BulkOrderPage, replace with your actual BulkOrderPage implementation
-class BulkOrderPage extends StatelessWidget {
+class RoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bulk Order'),
+        title: Text('Fuel at Ro'),
       ),
       body: Center(
-        child: Text('Bulk Order Page Content'),
+        child: Text('Fuel at Ro Page Content'),
       ),
     );
   }

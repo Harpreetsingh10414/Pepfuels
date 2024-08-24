@@ -49,7 +49,7 @@ class _JerryCanState extends State<JerryCan> {
       body: Stack(
         children: <Widget>[
           Image.asset(
-            '../assets/images/background-all-img.jpg', // Ensure this path is correct
+            '../assets/images/background-img-for-all-internal.jpg', // Ensure this path is correct
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,
@@ -81,13 +81,24 @@ class _JerryCanState extends State<JerryCan> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    Wrap(
-                      spacing: 20,
-                      children: <Widget>[
-                        _buildQuantityButton(5),
-                        _buildQuantityButton(10),
-                        _buildQuantityButton(15),
-                        _buildQuantityButton(20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          children: <Widget>[
+                            _buildQuantityButton(5),
+                            SizedBox(height: 10), // Space between buttons
+                            _buildQuantityButton(10),
+                          ],
+                        ),
+                        SizedBox(width: 20), // Space between columns
+                        Column(
+                          children: <Widget>[
+                            _buildQuantityButton(15),
+                            SizedBox(height: 10), // Space between buttons
+                            _buildQuantityButton(20),
+                          ],
+                        ),
                       ],
                     ),
                     SizedBox(height: 20),
@@ -133,7 +144,7 @@ class _JerryCanState extends State<JerryCan> {
           child: Text('$liters Liters'),
         ),
         style: ElevatedButton.styleFrom(
-          minimumSize: Size(double.infinity, 50),
+          minimumSize: Size(150, 50), // Adjust size to fit in column
         ),
       ),
     );
