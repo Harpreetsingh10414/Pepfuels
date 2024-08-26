@@ -37,15 +37,16 @@ router.post(
   '/',
   authMiddleware,
   async (req, res) => {
-    const { orderID, status, deliveryDate, trackingDetails } = req.body;
-    console.log('Creating new tracking entry with data:', { orderID, status, deliveryDate, trackingDetails });
+    const { orderID, status, deliveryDate, trackingDetails, deliveryAddress } = req.body; // Include deliveryAddress
+    console.log('Creating new tracking entry with data:', { orderID, status, deliveryDate, trackingDetails, deliveryAddress });
 
     try {
       const newTracking = new OrderTracking({
         orderID,
         status,
         deliveryDate,
-        trackingDetails
+        trackingDetails,
+        deliveryAddress  // Save deliveryAddress
       });
 
       await newTracking.save();
@@ -57,6 +58,7 @@ router.post(
     }
   }
 );
+
 
 /**
  * @swagger
@@ -124,8 +126,8 @@ router.get('/:orderID', authMiddleware, async (req, res) => {
  *         description: Order not found
  */
 router.put('/:orderID', authMiddleware, async (req, res) => {
-  const { status, deliveryDate, trackingDetails } = req.body;
-  console.log('Updating tracking information for orderID:', req.params.orderID, 'with data:', { status, deliveryDate, trackingDetails });
+  const { status, deliveryDate, trackingDetails, deliveryAddress } = req.body; // Include deliveryAddress
+  console.log('Updating tracking information for orderID:', req.params.orderID, 'with data:', { status, deliveryDate, trackingDetails, deliveryAddress });
 
   try {
     let trackingInfo = await OrderTracking.findOne({ orderID: req.params.orderID });
@@ -137,6 +139,7 @@ router.put('/:orderID', authMiddleware, async (req, res) => {
     trackingInfo.status = status || trackingInfo.status;
     trackingInfo.deliveryDate = deliveryDate || trackingInfo.deliveryDate;
     trackingInfo.trackingDetails = trackingDetails || trackingInfo.trackingDetails;
+    trackingInfo.deliveryAddress = deliveryAddress || trackingInfo.deliveryAddress; // Update deliveryAddress
 
     await trackingInfo.save();
     console.log('Tracking information updated:', trackingInfo);
@@ -146,5 +149,6 @@ router.put('/:orderID', authMiddleware, async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
 
 module.exports = router;

@@ -42,7 +42,10 @@ router.post(
       .withMessage('Fuel type must be either petrol or diesel'),
     check('quantity')
       .isInt({ min: 100, max: 6000 })
-      .withMessage('Quantity must be an integer between 100 and 6000')
+      .withMessage('Quantity must be an integer between 100 and 6000'),
+    check('deliveryAddress')
+      .notEmpty()
+      .withMessage('Delivery address is required')  // Validate deliveryAddress
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -50,7 +53,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { fuelType, quantity } = req.body;
+    const { fuelType, quantity, deliveryAddress } = req.body;  // Include deliveryAddress
     const userID = req.user.id;
 
     try {
@@ -67,7 +70,8 @@ router.post(
         userID,
         fuelType,
         quantity,
-        totalAmount
+        totalAmount,
+        deliveryAddress  // Save deliveryAddress
       });
 
       await newOrder.save();
@@ -78,5 +82,6 @@ router.post(
     }
   }
 );
+
 
 module.exports = router;

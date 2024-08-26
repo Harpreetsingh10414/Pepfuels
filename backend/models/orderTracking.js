@@ -5,6 +5,10 @@ const OrderTrackingSchema = new mongoose.Schema({
   status: { type: String, required: true, default: 'Pending' }, // e.g., Pending, In Progress, Delivered
   deliveryDate: { type: Date },
   trackingDetails: { type: String }, // e.g., tracking number, courier details
+  deliveryAddress: {  // Add deliveryAddress field
+    type: String,
+    required: true,  // Make it required or optional as per your needs
+  },
   createdAt: { type: Date, default: Date.now }
 });
 

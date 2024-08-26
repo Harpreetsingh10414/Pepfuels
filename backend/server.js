@@ -4,7 +4,9 @@ const { swaggerUi, swaggerSpec } = require('./config/swagger');
 const fuelPrices = require('./mockFuelPrices'); // Correct path to mockFuelPrices
 const googlePlaces = require('./routes/googlePlaces');
 const petrolPumps = require('./routes/petrolPump');
-
+const stateRoutes = require('./routes/stateRoutes'); 
+const states = require('./routes/states');
+const dieselPrices = require('./routes/dieselPrices');
 const cors = require('cors'); // Import the cors package
 require('dotenv').config();
 
@@ -33,11 +35,15 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/profile', require('./routes/profile'));
 app.use('/api/fuelPrices', require('./routes/fuelPrices'));
-app.use('/api/jerrycanOrders', require('./routes/jerrycanOrders')); // Include the new route
-app.use('/api/bulkOrders', require('./routes/bulkOrders')); // Include the new bulk order route
+app.use('/api/jerrycanOrders', require('./routes/jerrycanOrders'));
+app.use('/api/bulkOrders', require('./routes/bulkOrders'));
 app.use('/api/orderTracking', require('./routes/orderTracking'));
 app.use('/api/petrolPumps', petrolPumps);
 app.use('/api/google-places', googlePlaces);
+// app.use('/api/states', require('./routes/stateRoutes')); // Include the new state route
+// app.use('/api/states', stateRoutes);
+app.use('/api/states', states); 
+app.use('/api/dieselPrices', dieselPrices);
 
 // Simple route to fetch users
 app.get('/api/users', async (req, res) => {

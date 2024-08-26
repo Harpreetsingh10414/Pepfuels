@@ -26,11 +26,14 @@ const fuelPrices = {
  *           required:
  *             - fuelType
  *             - quantity
+ *             - deliveryAddress
  *           properties:
  *             fuelType:
  *               type: string
  *             quantity:
  *               type: number
+ *             deliveryAddress:
+ *               type: string
  *     responses:
  *       201:
  *         description: Order created successfully
@@ -42,7 +45,8 @@ router.post(
   [
     authMiddleware,
     check('fuelType', 'Fuel type is required').not().isEmpty(),
-    check('quantity', 'Quantity is required').isIn([5, 10, 15, 20])
+    check('quantity', 'Quantity is required').isIn([5, 10, 15, 20]),
+    check('deliveryAddress', 'Delivery address is required').not().isEmpty()  // Validate deliveryAddress
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -50,7 +54,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { fuelType, quantity } = req.body;
+    const { fuelType, quantity, deliveryAddress } = req.body;
     const userID = req.user.id;
 
     try {
@@ -67,7 +71,8 @@ router.post(
         userID,
         fuelType,
         quantity,
-        totalAmount
+        totalAmount,
+        deliveryAddress  // Save deliveryAddress
       });
 
       await newOrder.save();

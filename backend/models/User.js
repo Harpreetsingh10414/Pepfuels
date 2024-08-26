@@ -6,7 +6,9 @@ const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  phone: { type: String } // Added phone field
+  phone: { type: String }, // Added phone field
+  isLoggedIn: { type: Boolean, default: false },  // Track if the user is logged in
+  userId: {  type: String, unique: true, required: true }
 });
 
 // Pre-save hook to hash password before saving to the database

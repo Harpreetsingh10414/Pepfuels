@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 const User = require('../models/User');
 const authMiddleware = require('../middleware/auth'); // Make sure this path is correct
+const { v4: uuidv4 } = require('uuid'); // For generating unique userId
 const router = express.Router();
 
 // User Registration Route
@@ -73,7 +74,8 @@ router.post(
         name,
         email,
         password,
-        phone // Include phone number
+        phone,
+        userId: uuidv4() // Generate a unique userId
       });
 
       // Commenting out hashing
@@ -105,6 +107,7 @@ router.post(
     }
   }
 );
+
 
 
 // User Login Route
@@ -166,10 +169,13 @@ router.post(
         return res.status(400).json({ msg: 'Invalid credentials' });
       }
 
-      // Commenting out password comparison
-      // const isMatch = await bcrypt.compare(password, user.password);
+      // Check if user is already logged in
+      if (user.isLoggedIn) {
+        console.log("User already logged in");
+        return res.status(400).json({ msg: 'User already logged in' });
+      }
 
-      // Directly compare plaintext passwords
+      // Compare passwords
       const isMatch = password === user.password;
       
       console.log('Password to compare:', password);
@@ -180,6 +186,10 @@ router.post(
         console.log("Password does not match");
         return res.status(400).json({ msg: 'Invalid credentials' });
       }
+
+      // Set user as logged in
+      user.isLoggedIn = true;
+      await user.save();
 
       const payload = {
         user: {
@@ -202,6 +212,28 @@ router.post(
     }
   }
 );
+
+// Logout Route
+router.post('/logout', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    // Set user as logged out
+    user.isLoggedIn = false;
+    await user.save();
+
+    res.json({ msg: 'User logged out successfully' });
+  } catch (err) {
+    console.error('Logout error:', err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+
 
 // Get user profile
 router.get('/profile', authMiddleware, async (req, res) => {

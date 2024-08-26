@@ -6,6 +6,7 @@ const BulkOrderSchema = new mongoose.Schema({
   fuelType: { type: String, required: true },
   quantity: { type: Number, required: true, min: 100, max: 6000 },
   totalAmount: { type: Number, required: true },
+  deliveryAddress: { type: String, required: true },  // Add deliveryAddress field
   createdAt: { type: Date, default: Date.now },
 });
 
