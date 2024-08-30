@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './PumpLocator.dart'; // Import the PumpLocator page
+import './SubmitFormPagejeery.dart'; // Import the SubmitFormPagejeery page
 
 class JerryCan extends StatefulWidget {
   const JerryCan({Key? key}) : super(key: key);
@@ -28,12 +28,14 @@ class _JerryCanState extends State<JerryCan> {
     });
   }
 
-  void _navigateToPumpLocator() {
+  void _navigateToSubmitForm() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PumpLocator(
-          selectedLiters: _selectedLiters,
+        builder: (context) => SubmitFormPagejeery(
+          dieselPrice: _dieselPrice,
+          quantity: _selectedLiters,
+          totalAmount: _totalAmount,
         ),
       ),
     );
@@ -112,16 +114,14 @@ class _JerryCanState extends State<JerryCan> {
                       children: [
                         Column(
                           children: <Widget>[
-                            _buildQuantityButton(5),
-                            SizedBox(height: 10), // Space between buttons
                             _buildQuantityButton(10),
+                            SizedBox(height: 10), // Space between buttons
+                            _buildQuantityButton(15),
                           ],
                         ),
                         SizedBox(width: 20), // Space between columns
                         Column(
                           children: <Widget>[
-                            _buildQuantityButton(15),
-                            SizedBox(height: 10), // Space between buttons
                             _buildQuantityButton(20),
                           ],
                         ),
@@ -131,10 +131,10 @@ class _JerryCanState extends State<JerryCan> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: ElevatedButton(
-                        onPressed: _totalAmount > 0 ? _navigateToPumpLocator : null,
+                        onPressed: _totalAmount > 0 ? _navigateToSubmitForm : null,
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
-                          child: Text('Proceed to Pump Locator'),
+                          child: Text('Proceed to Submit Form'),
                         ),
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size(double.infinity, 50), // Make button take full width

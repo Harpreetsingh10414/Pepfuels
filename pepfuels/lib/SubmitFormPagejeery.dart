@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart'; // Import shared preferences for token retrieval
 
-class SubmitFormPage extends StatefulWidget {
+class SubmitFormPagejeery extends StatefulWidget {
   final String dieselPrice;
   final int quantity;
+  final int totalAmount;
 
-  const SubmitFormPage({
+  const SubmitFormPagejeery({
     Key? key,
     required this.dieselPrice,
     required this.quantity,
+    required this.totalAmount,
   }) : super(key: key);
 
   @override
-  _SubmitFormPageState createState() => _SubmitFormPageState();
+  _SubmitFormPagejeeryState createState() => _SubmitFormPagejeeryState();
 }
 
-class _SubmitFormPageState extends State<SubmitFormPage> {
+class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
@@ -23,12 +28,76 @@ class _SubmitFormPageState extends State<SubmitFormPage> {
   bool _isLoading = false;
   String _errorMessage = '';
 
+  Future<void> _submitForm() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      // Collect form data
+      final name = _nameController.text;
+      final address = _addressController.text;
+      final mobile = _mobileController.text;
+      final email = _emailController.text;
+
+      // Prepare the payload for the API request
+      final payload = {
+        'fuelType': 'diesel',
+        'quantity': widget.quantity,
+        'deliveryAddress': address,
+        'mobile': mobile,
+        'name': name,
+        'email': email,
+      };
+
+      print('Payload: $payload');
+      print('Total Amount: ${widget.totalAmount}');
+
+      try {
+        // Retrieve the token from shared preferences
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString('jwtToken');
+        // Make the POST request
+        final response = await http.post(
+          Uri.parse(
+              'http://184.168.120.64:5000/api/jerrycanOrders'), // Ensure this endpoint is correct
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token', // Use the retrieved token
+          },
+          body: jsonEncode(payload),
+        );
+
+        print('Response Status: ${response.statusCode}');
+        print('Response Body: ${response.body}');
+
+        if (response.statusCode == 201) {
+          // Order created successfully
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Order submitted successfully!')),
+          );
+        } else {
+          // Handle error response
+          final errorResponse = jsonDecode(response.body);
+          setState(() {
+            _errorMessage =
+                errorResponse['errors']?.join(', ') ?? 'Something went wrong';
+          });
+        }
+      } catch (e) {
+        setState(() {
+          _errorMessage = 'Network error: ${e.toString()}';
+        });
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Calculate total amount
-    final int dieselPrice = int.tryParse(widget.dieselPrice) ?? 0;
-    final int totalAmount = dieselPrice * widget.quantity;
-
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -86,7 +155,7 @@ class _SubmitFormPageState extends State<SubmitFormPage> {
                       ),
                       SizedBox(height: 10),
                       Text(
-                        'Total Amount: $totalAmount Rs',
+                        'Total Amount: ${widget.totalAmount} Rs',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -101,7 +170,8 @@ class _SubmitFormPageState extends State<SubmitFormPage> {
                           filled: true,
                           border: OutlineInputBorder(),
                           floatingLabelBehavior: FloatingLabelBehavior.never,
-                          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 10),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -119,7 +189,8 @@ class _SubmitFormPageState extends State<SubmitFormPage> {
                           filled: true,
                           border: OutlineInputBorder(),
                           floatingLabelBehavior: FloatingLabelBehavior.never,
-                          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 10),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -137,7 +208,8 @@ class _SubmitFormPageState extends State<SubmitFormPage> {
                           filled: true,
                           border: OutlineInputBorder(),
                           floatingLabelBehavior: FloatingLabelBehavior.never,
-                          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 10),
                         ),
                         keyboardType: TextInputType.phone,
                         validator: (value) {
@@ -159,14 +231,16 @@ class _SubmitFormPageState extends State<SubmitFormPage> {
                           filled: true,
                           border: OutlineInputBorder(),
                           floatingLabelBehavior: FloatingLabelBehavior.never,
-                          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 10),
                         ),
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your email';
                           }
-                          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+$')
+                              .hasMatch(value)) {
                             return 'Please enter a valid email address';
                           }
                           return null;
@@ -177,21 +251,22 @@ class _SubmitFormPageState extends State<SubmitFormPage> {
                           ? CircularProgressIndicator()
                           : ElevatedButton(
                               onPressed: _submitForm,
-                              child: Text('Submit'),
+                              child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Text('Submit'),
+                              ),
                               style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.blue,
-                                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                                textStyle: TextStyle(fontSize: 18),
+                                minimumSize: Size(double.infinity, 50),
                               ),
                             ),
-                      if (_errorMessage.isNotEmpty) ...[
-                        SizedBox(height: 20),
-                        Text(
-                          _errorMessage,
-                          style: TextStyle(color: Colors.red),
+                      if (_errorMessage.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Text(
+                            _errorMessage,
+                            style: TextStyle(color: Colors.red),
+                          ),
                         ),
-                      ],
                     ],
                   ),
                 ),
@@ -201,40 +276,5 @@ class _SubmitFormPageState extends State<SubmitFormPage> {
         ],
       ),
     );
-  }
-
-  Future<void> _submitForm() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() {
-      _isLoading = true;
-      _errorMessage = '';
-    });
-
-    try {
-      // Replace this with your API call logic
-      await Future.delayed(Duration(seconds: 2)); // Simulate a network call
-
-      // Handle successful submission
-      setState(() {
-        _isLoading = false;
-      });
-
-      // Navigate or show success message
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = 'An error occurred. Please try again.';
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _addressController.dispose();
-    _mobileController.dispose();
-    _emailController.dispose();
-    super.dispose();
   }
 }

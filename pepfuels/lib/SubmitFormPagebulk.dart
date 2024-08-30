@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SubmitFormPagebulk extends StatefulWidget {
   final String dieselPrice;
@@ -58,12 +59,24 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
       print('Total Amount: $totalAmount');
 
       try {
+        // Retrieve the token from SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString('jwtToken');
+
+        if (token == null) {
+          setState(() {
+            _errorMessage = 'No token found. Please log in again.';
+            _isLoading = false;
+          });
+          return;
+        }
+
         // Make the POST request
         final response = await http.post(
           Uri.parse('http://184.168.120.64:5000/api/bulkOrders'),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer YOUR_AUTH_TOKEN', // Replace with actual token if needed
+            'Authorization': 'Bearer $token', // Use the retrieved token
           },
           body: jsonEncode(payload),
         );
