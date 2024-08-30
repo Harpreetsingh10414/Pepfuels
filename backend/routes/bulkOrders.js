@@ -11,40 +11,90 @@ const fuelPrices = require('../mockFuelPrices'); // Import mock fuel prices
  * /api/bulkOrders:
  *   post:
  *     summary: Create a bulk order
- *     description: Create a new bulk order
- *     parameters:
- *       - in: body
- *         name: order
- *         description: The order to create
- *         schema:
- *           type: object
- *           required:
- *             - fuelType
- *             - quantity
- *             - deliveryAddress
- *             - mobile
- *             - name
- *             - email
- *           properties:
- *             fuelType:
- *               type: string
- *               enum: [petrol, diesel]
- *             quantity:
- *               type: number
- *             deliveryAddress:
- *               type: string
- *             mobile:
- *               type: string
- *             name:
- *               type: string
- *             email:
- *               type: string
+ *     description: Create a new bulk order with the required details.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - fuelType
+ *               - quantity
+ *               - deliveryAddress
+ *               - mobile
+ *               - name
+ *               - email
+ *             properties:
+ *               fuelType:
+ *                 type: string
+ *                 enum: [petrol, diesel]
+ *                 description: Type of fuel to order (petrol or diesel).
+ *               quantity:
+ *                 type: number
+ *                 description: Quantity of fuel to order (between 100 and 6000).
+ *               deliveryAddress:
+ *                 type: string
+ *                 description: Address where the fuel should be delivered.
+ *               mobile:
+ *                 type: string
+ *                 description: Mobile number of the person placing the order.
+ *               name:
+ *                 type: string
+ *                 description: Name of the person placing the order.
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: Email of the person placing the order.
  *     responses:
  *       201:
  *         description: Order created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 orderID:
+ *                   type: string
+ *                 userID:
+ *                   type: string
+ *                 fuelType:
+ *                   type: string
+ *                 quantity:
+ *                   type: number
+ *                 totalAmount:
+ *                   type: number
+ *                 deliveryAddress:
+ *                   type: string
+ *                 mobile:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
  *       400:
- *         description: Bad request
+ *         description: Bad request, validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       msg:
+ *                         type: string
+ *                       param:
+ *                         type: string
+ *                       location:
+ *                         type: string
  */
+
 router.post(
   '/',
   [
