@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './SubmitFormPage.dart'; // Import the SubmitFormPage
+import './SubmitFormPagebulk.dart'; // Import the SubmitFormPage
 
 class BulkOrder extends StatefulWidget {
   final String dieselPrice;
@@ -16,7 +16,6 @@ class _BulkOrderState extends State<BulkOrder> {
   int _totalAmount = 0;
 
   void _calculateAmount() {
-    // Convert diesel price to double for accurate calculations
     final double pricePerLiter = double.tryParse(widget.dieselPrice) ?? 100.0; // Default to 100 if parsing fails
     final int selectedLiters = int.tryParse(_litersController.text) ?? 0;
 
@@ -28,7 +27,6 @@ class _BulkOrderState extends State<BulkOrder> {
     } else {
       setState(() {
         _errorText = '';
-        // Calculate total amount with delivery charge
         _totalAmount = ((selectedLiters * pricePerLiter) + 100).toInt(); // Convert to int for display
       });
     }
@@ -38,9 +36,10 @@ class _BulkOrderState extends State<BulkOrder> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SubmitFormPage(
+        builder: (context) => SubmitFormPagebulk(
           dieselPrice: widget.dieselPrice,
           quantity: int.tryParse(_litersController.text) ?? 0,
+          totalAmount: _totalAmount,
         ),
       ),
     );

@@ -10,6 +10,7 @@ import 'package:pepfuels/Fuel.dart' as fuel;
 import 'package:pepfuels/PumpLocator.dart' as pumplocator;
 import 'package:pepfuels/OrderId.dart' as orderid;
 import 'SubmitFormPagebulk.dart'; // Import the updated SubmitFormPagebulk
+import 'SubmitFormPagejeery.dart'; // Import SubmitFormPagejeery
 import 'CommonLayout.dart';
 import 'SelectState.dart'; // Import SelectState page
 
@@ -34,7 +35,8 @@ class MyApp extends StatelessWidget {
         'jerrycan': (context) =>
             CommonLayout(child: const jerrycan.JerryCan(), currentIndex: 1),
         'bulkorder': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          final args = ModalRoute.of(context)?.settings.arguments
+              as Map<String, dynamic>?;
           final dieselPrice = args?['dieselPrice'] as String? ?? '0';
           return CommonLayout(
             child: bulkorder.BulkOrder(dieselPrice: dieselPrice),
@@ -46,7 +48,8 @@ class MyApp extends StatelessWidget {
         'fuel': (context) =>
             CommonLayout(child: const fuel.Fuel(), currentIndex: 0),
         'pumplocator': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          final args = ModalRoute.of(context)?.settings.arguments
+              as Map<String, dynamic>?;
           final selectedLiters = args?['selectedLiters'] ?? 0;
 
           return CommonLayout(
@@ -55,17 +58,20 @@ class MyApp extends StatelessWidget {
           );
         },
         'orderid': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+          final args = ModalRoute.of(context)?.settings.arguments
+              as Map<String, dynamic>;
           final selectedLiters = args['selectedLiters'] ?? 0;
           final fuelType = args['fuelType'] ?? 'petrol';
 
           return CommonLayout(
-            child: orderid.OrderId(selectedLiters: selectedLiters, fuelType: fuelType),
+            child: orderid.OrderId(
+                selectedLiters: selectedLiters, fuelType: fuelType),
             currentIndex: 0,
           );
         },
-        'submitForm': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+        'submitFormBulk': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments
+              as Map<String, dynamic>?;
           final dieselPrice = args?['dieselPrice'] as String? ?? '0';
           final quantity = args?['quantity'] as int? ?? 0;
           final totalAmount = args?['totalAmount'] as int? ?? 0;
@@ -73,7 +79,20 @@ class MyApp extends StatelessWidget {
           return SubmitFormPagebulk(
             dieselPrice: dieselPrice,
             quantity: quantity,
-            totalAmount: totalAmount, // Pass totalAmount to SubmitFormPagebulk
+            totalAmount: totalAmount,
+          );
+        },
+        'submitFormJerry': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments
+              as Map<String, dynamic>?;
+          final dieselPrice = args?['dieselPrice'] as String? ?? '0';
+          final quantity = args?['quantity'] as int? ?? 0;
+          final totalAmount = args?['totalAmount'] as int? ?? 0;
+
+          return SubmitFormPagejeery(
+            dieselPrice: dieselPrice,
+            quantity: quantity,
+            totalAmount: totalAmount, // Pass totalAmount to SubmitFormPagejeery
           );
         },
         'selectState': (context) => SelectState(), // Add SelectState route
