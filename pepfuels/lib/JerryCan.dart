@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './Pumplocator.dart'; // Import the PumpLocator page
+import './PumpLocator.dart'; // Import the PumpLocator page
 
 class JerryCan extends StatefulWidget {
   const JerryCan({Key? key}) : super(key: key);
@@ -11,11 +11,20 @@ class JerryCan extends StatefulWidget {
 class _JerryCanState extends State<JerryCan> {
   int _selectedLiters = 0;
   int _totalAmount = 0;
+  String _dieselPrice = '';
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final Map arguments = ModalRoute.of(context)?.settings.arguments as Map;
+    _dieselPrice = arguments['dieselPrice'] ?? '100'; // Default price if not available
+  }
 
   void _calculateAmount(int liters) {
     setState(() {
+      final pricePerLiter = int.tryParse(_dieselPrice) ?? 100; // Default to 100 if parsing fails
       _selectedLiters = liters;
-      _totalAmount = liters * 100; // 100 Rs per liter
+      _totalAmount = liters * pricePerLiter; // Ensure result is an integer
     });
   }
 
@@ -45,6 +54,23 @@ class _JerryCanState extends State<JerryCan> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         automaticallyImplyLeading: false, // To center title without a leading widget
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(40),
+          child: Container(
+            color: Colors.black.withOpacity(0.7),
+            height: 40,
+            child: Center(
+              child: Text(
+                'Diesel Price: $_dieselPrice Rs/L',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
       body: Stack(
         children: <Widget>[
@@ -101,14 +127,6 @@ class _JerryCanState extends State<JerryCan> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
-                    // Padding(
-                    //   padding: const EdgeInsets.all(15.0),
-                    //   child: Text(
-                    //     'Total Amount: $_totalAmount Rs',
-                    //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                    //   ),
-                    // ),
                     SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.all(10.0),

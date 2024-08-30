@@ -1,41 +1,49 @@
 import 'package:flutter/material.dart';
-import './Pumplocator.dart'; // Import the PumpLocator page
+import './SubmitFormPage.dart'; // Import the SubmitFormPage
 
 class BulkOrder extends StatefulWidget {
-  const BulkOrder({super.key});
+  final String dieselPrice;
+
+  const BulkOrder({Key? key, required this.dieselPrice}) : super(key: key);
 
   @override
   _BulkOrderState createState() => _BulkOrderState();
 }
 
 class _BulkOrderState extends State<BulkOrder> {
-  int _selectedLiters = 0; // Initialize to 0
+  final TextEditingController _litersController = TextEditingController();
+  String _errorText = '';
   int _totalAmount = 0;
 
-  void _calculateAmount(int liters) {
-    setState(() {
-      _selectedLiters = liters;
-      _totalAmount = liters * 100; // 100rs per liter
-    });
+  void _calculateAmount() {
+    // Convert diesel price to double for accurate calculations
+    final double pricePerLiter = double.tryParse(widget.dieselPrice) ?? 100.0; // Default to 100 if parsing fails
+    final int selectedLiters = int.tryParse(_litersController.text) ?? 0;
+
+    if (selectedLiters < 500 || selectedLiters > 12000) {
+      setState(() {
+        _errorText = 'Please enter a quantity between 500 and 12,000 liters.';
+        _totalAmount = 0;
+      });
+    } else {
+      setState(() {
+        _errorText = '';
+        // Calculate total amount with delivery charge
+        _totalAmount = ((selectedLiters * pricePerLiter) + 100).toInt(); // Convert to int for display
+      });
+    }
   }
 
-  void _navigateToPumpLocator() {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => PumpLocator(
-        selectedLiters: _selectedLiters,
+  void _submit() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SubmitFormPage(
+          dieselPrice: widget.dieselPrice,
+          quantity: int.tryParse(_litersController.text) ?? 0,
+        ),
       ),
-    ),
-  );
-}
-
-  List<int> _generateLitersList() {
-    List<int> litersList = [0]; // Add 0 as the default option
-    for (int i = 100; i <= 6000; i += 100) {
-      litersList.add(i);
-    }
-    return litersList;
+    );
   }
 
   @override
@@ -44,7 +52,7 @@ class _BulkOrderState extends State<BulkOrder> {
       appBar: AppBar(
         title: Center(
           child: Image.asset(
-            '../assets/images/logo.png', // Ensure this path is correct
+            '../assets/images/logo.png',
             width: 200,
             height: 50,
             fit: BoxFit.contain,
@@ -52,18 +60,35 @@ class _BulkOrderState extends State<BulkOrder> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        automaticallyImplyLeading: false, // To center title without a leading widget
+        automaticallyImplyLeading: false,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(40),
+          child: Container(
+            color: Colors.black.withOpacity(0.7),
+            height: 40,
+            child: Center(
+              child: Text(
+                'Diesel Price: ${widget.dieselPrice} Rs/L',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
       body: Stack(
         children: <Widget>[
           Image.asset(
-            '../assets/images/background-all-img.jpg', // Ensure this path is correct
+            '../assets/images/background-img-for-all-internal.jpg',
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,
           ),
           Container(
-            color: Colors.black.withOpacity(0.5), // Overlay shade
+            color: Colors.black.withOpacity(0.5),
           ),
           Center(
             child: SingleChildScrollView(
@@ -84,50 +109,38 @@ class _BulkOrderState extends State<BulkOrder> {
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Text(
-                        'Select Quantity (in liters):',
+                        'Enter Quantity (in liters):',
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
                     SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: DropdownButton<int>(
-                        value: _selectedLiters,
-                        onChanged: (int? newValue) {
-                          if (newValue != null) {
-                            _calculateAmount(newValue);
-                          }
-                        },
-                        items: _generateLitersList()
-                            .map<DropdownMenuItem<int>>((int value) {
-                          return DropdownMenuItem<int>(
-                            value: value,
-                            child: Text('$value Liters'),
-                          );
-                        }).toList(),
-                        style: TextStyle(color: Colors.white), // Dropdown text color
-                        dropdownColor: Colors.black, // Dropdown background color
+                    TextField(
+                      controller: _litersController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: 'Enter liters',
+                        errorText: _errorText.isEmpty ? null : _errorText,
                       ),
+                      onChanged: (value) => _calculateAmount(),
                     ),
                     SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        'Total Amount: $_totalAmount Rs',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
+                    Text(
+                      'Total Amount: $_totalAmount Rs',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                     SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: ElevatedButton(
-                        onPressed: _totalAmount > 0 ? _navigateToPumpLocator : null,
+                        onPressed: _totalAmount > 0 ? _submit : null,
                         child: Padding(
-                          padding: const EdgeInsets.all(20.0), // Adjust padding as needed
-                          child: Text('Proceed to Pump Locator'),
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text('Proceed to Submit Form'),
                         ),
                         style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 50), // Make button take full width
+                          minimumSize: Size(double.infinity, 50),
                         ),
                       ),
                     ),
@@ -137,30 +150,6 @@ class _BulkOrderState extends State<BulkOrder> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: BulkOrder(),
-    routes: {
-      'payment': (context) => PaymentPage(), // Define your PaymentPage here
-    },
-  ));
-}
-
-// Placeholder for PaymentPage, replace with your actual PaymentPage implementation
-class PaymentPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Payment Page'),
-      ),
-      body: Center(
-        child: Text('Payment Gateway Integration Here'),
       ),
     );
   }
