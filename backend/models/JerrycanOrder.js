@@ -24,11 +24,26 @@ const JerrycanOrderSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  deliveryAddress: { 
+    type: String, 
+    required: true 
+  },
+  mobile: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
-  },
-  deliveryAddress: { type: String, required: true }  // Add deliveryAddress field
+  }
 });
 
 module.exports = mongoose.model('JerrycanOrder', JerrycanOrderSchema);

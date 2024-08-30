@@ -20,7 +20,7 @@ app.use(express.json({ extended: false }));
 
 // CORS Configuration
 const corsOptions = {
-  origin: 'http://localhost:55229', // Allow requests from your frontend URL
+  origin: '*', // Allow requests from any origin
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
@@ -57,16 +57,16 @@ app.get('/api/users', async (req, res) => {
 });
 
 // Function to log fuel prices
-const logFuelPrices = () => {
-  const { petrol, diesel } = fuelPrices;
-  console.log(`Current Fuel Prices - Petrol: ${petrol}, Diesel: ${diesel}`);
-};
+// const logFuelPrices = () => {
+//   const { petrol, diesel } = fuelPrices;
+//   console.log(`Current Fuel Prices - Petrol: ${petrol}, Diesel: ${diesel}`);
+// };
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Swagger documentation available at http://localhost:${PORT}/api-docs`);
-  console.log('Fuel Prices:', fuelPrices); // Debugging
-  logFuelPrices(); // Log fuel prices when the server starts
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on http://184.168.120.64:${PORT}`); // Replace with your server's IP
+  console.log(`Swagger documentation available at http://184.168.120.64:${PORT}/api-docs`);
+  // console.log('Fuel Prices:', fuelPrices); // Debugging
+  // logFuelPrices(); // Log fuel prices when the server starts
 });

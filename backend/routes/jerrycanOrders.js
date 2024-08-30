@@ -3,7 +3,7 @@ const { check, validationResult } = require('express-validator');
 const authMiddleware = require('../middleware/auth');
 const JerrycanOrder = require('../models/JerrycanOrder');
 const router = express.Router();
-const { v4: uuidv4 } = require('uuid'); // For generating unique orderID
+const { v4: uuidv4 } = require('uuid');
 
 // Mock data for fuel prices
 const fuelPrices = {
@@ -27,12 +27,21 @@ const fuelPrices = {
  *             - fuelType
  *             - quantity
  *             - deliveryAddress
+ *             - mobile
+ *             - name
+ *             - email
  *           properties:
  *             fuelType:
  *               type: string
  *             quantity:
  *               type: number
  *             deliveryAddress:
+ *               type: string
+ *             mobile:
+ *               type: string
+ *             name:
+ *               type: string
+ *             email:
  *               type: string
  *     responses:
  *       201:
@@ -46,7 +55,10 @@ router.post(
     authMiddleware,
     check('fuelType', 'Fuel type is required').not().isEmpty(),
     check('quantity', 'Quantity is required').isIn([5, 10, 15, 20]),
-    check('deliveryAddress', 'Delivery address is required').not().isEmpty()  // Validate deliveryAddress
+    check('deliveryAddress', 'Delivery address is required').not().isEmpty(),
+    check('mobile', 'Mobile number is required').not().isEmpty(),
+    check('name', 'Name is required').not().isEmpty(),
+    check('email', 'Valid email is required').isEmail(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -54,7 +66,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { fuelType, quantity, deliveryAddress } = req.body;
+    const { fuelType, quantity, deliveryAddress, mobile, name, email } = req.body;
     const userID = req.user.id;
 
     try {
@@ -72,7 +84,10 @@ router.post(
         fuelType,
         quantity,
         totalAmount,
-        deliveryAddress  // Save deliveryAddress
+        deliveryAddress,
+        mobile,
+        name,
+        email
       });
 
       await newOrder.save();

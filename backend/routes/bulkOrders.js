@@ -3,7 +3,7 @@ const { check, validationResult } = require('express-validator');
 const authMiddleware = require('../middleware/auth');
 const BulkOrder = require('../models/BulkOrder');
 const router = express.Router();
-const { v4: uuidv4 } = require('uuid'); // For generating unique orderID
+const { v4: uuidv4 } = require('uuid');
 const fuelPrices = require('../mockFuelPrices'); // Import mock fuel prices
 
 /**
@@ -21,12 +21,24 @@ const fuelPrices = require('../mockFuelPrices'); // Import mock fuel prices
  *           required:
  *             - fuelType
  *             - quantity
+ *             - deliveryAddress
+ *             - mobile
+ *             - name
+ *             - email
  *           properties:
  *             fuelType:
  *               type: string
  *               enum: [petrol, diesel]
  *             quantity:
  *               type: number
+ *             deliveryAddress:
+ *               type: string
+ *             mobile:
+ *               type: string
+ *             name:
+ *               type: string
+ *             email:
+ *               type: string
  *     responses:
  *       201:
  *         description: Order created successfully
@@ -45,7 +57,10 @@ router.post(
       .withMessage('Quantity must be an integer between 100 and 6000'),
     check('deliveryAddress')
       .notEmpty()
-      .withMessage('Delivery address is required')  // Validate deliveryAddress
+      .withMessage('Delivery address is required'),
+    check('mobile', 'Mobile number is required').not().isEmpty(),
+    check('name', 'Name is required').not().isEmpty(),
+    check('email', 'Valid email is required').isEmail(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -53,7 +68,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { fuelType, quantity, deliveryAddress } = req.body;  // Include deliveryAddress
+    const { fuelType, quantity, deliveryAddress, mobile, name, email } = req.body;
     const userID = req.user.id;
 
     try {
@@ -71,7 +86,10 @@ router.post(
         fuelType,
         quantity,
         totalAmount,
-        deliveryAddress  // Save deliveryAddress
+        deliveryAddress,
+        mobile,
+        name,
+        email
       });
 
       await newOrder.save();
@@ -82,6 +100,5 @@ router.post(
     }
   }
 );
-
 
 module.exports = router;
