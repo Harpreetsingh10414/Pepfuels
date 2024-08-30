@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:5000/api/auth/login'), // Replace with your backend URL
+        Uri.parse('http://184.168.120.64:5000/api/auth/login'), // Replace with your backend URL
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'email': _emailController.text,

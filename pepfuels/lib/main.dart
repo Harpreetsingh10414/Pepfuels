@@ -9,8 +9,9 @@ import 'package:pepfuels/ProfilePage.dart' as profile;
 import 'package:pepfuels/Fuel.dart' as fuel;
 import 'package:pepfuels/PumpLocator.dart' as pumplocator;
 import 'package:pepfuels/OrderId.dart' as orderid;
-import 'SubmitFormPage.dart'; // Import SubmitFormPage
+import 'SubmitFormPagebulk.dart'; // Import the updated SubmitFormPagebulk
 import 'CommonLayout.dart';
+import 'SelectState.dart'; // Import SelectState page
 
 void main() {
   runApp(const MyApp());
@@ -32,14 +33,20 @@ class MyApp extends StatelessWidget {
             CommonLayout(child: const doorstep.DoorStep(), currentIndex: 0),
         'jerrycan': (context) =>
             CommonLayout(child: const jerrycan.JerryCan(), currentIndex: 1),
-        'bulkorder': (context) =>
-            CommonLayout(child: const bulkorder.BulkOrder(), currentIndex: 2),
+        'bulkorder': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          final dieselPrice = args?['dieselPrice'] as String? ?? '0';
+          return CommonLayout(
+            child: bulkorder.BulkOrder(dieselPrice: dieselPrice),
+            currentIndex: 2,
+          );
+        },
         'profile': (context) =>
             CommonLayout(child: const profile.ProfilePage(), currentIndex: 3),
         'fuel': (context) =>
             CommonLayout(child: const fuel.Fuel(), currentIndex: 0),
         'pumplocator': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as Map<String, int>;
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
           final selectedLiters = args?['selectedLiters'] ?? 0;
 
           return CommonLayout(
@@ -51,13 +58,25 @@ class MyApp extends StatelessWidget {
           final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
           final selectedLiters = args['selectedLiters'] ?? 0;
           final fuelType = args['fuelType'] ?? 'petrol';
-          
+
           return CommonLayout(
             child: orderid.OrderId(selectedLiters: selectedLiters, fuelType: fuelType),
             currentIndex: 0,
           );
         },
-        'submitForm': (context) => const SubmitFormPage(), // Add SubmitFormPage route
+        'submitForm': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          final dieselPrice = args?['dieselPrice'] as String? ?? '0';
+          final quantity = args?['quantity'] as int? ?? 0;
+          final totalAmount = args?['totalAmount'] as int? ?? 0;
+
+          return SubmitFormPagebulk(
+            dieselPrice: dieselPrice,
+            quantity: quantity,
+            totalAmount: totalAmount, // Pass totalAmount to SubmitFormPagebulk
+          );
+        },
+        'selectState': (context) => SelectState(), // Add SelectState route
       },
     );
   }

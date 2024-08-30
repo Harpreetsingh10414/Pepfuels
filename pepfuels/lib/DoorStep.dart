@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'SelectState.dart'; // Import the SelectState page
+import 'JerryCan.dart'; // Import the JerryCan page
+import 'BulkOrder.dart'; // Import the BulkOrder page
 
 class DoorStep extends StatelessWidget {
   const DoorStep({super.key});
@@ -81,7 +84,11 @@ class DoorStep extends StatelessWidget {
                               icon: Icons.local_gas_station,
                               label: 'Jerry Can',
                               onPressed: () {
-                                Navigator.pushNamed(context, 'jerrycan');
+                                Navigator.pushNamed(
+                                  context,
+                                  'selectState',
+                                  arguments: {'navigateTo': 'jerrycan'},
+                                );
                               },
                             ),
                             // Bulk Order Button
@@ -89,7 +96,11 @@ class DoorStep extends StatelessWidget {
                               icon: Icons.shopping_cart,
                               label: 'Bulk Order',
                               onPressed: () {
-                                Navigator.pushNamed(context, 'bulkorder');
+                                Navigator.pushNamed(
+                                  context,
+                                  'selectState',
+                                  arguments: {'navigateTo': 'bulkorder'},
+                                );
                               },
                             ),
                           ],
@@ -148,46 +159,6 @@ class DoorStep extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: DoorStep(),
-    routes: {
-      'jerrycan': (context) => JerryCanPage(), // Define your JerryCanPage here
-      'bulkorder': (context) => BulkOrderPage(), // Define your BulkOrderPage here
-    },
-  ));
-}
-
-// Placeholder for JerryCanPage, replace with your actual JerryCanPage implementation
-class JerryCanPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Jerry Can'),
-      ),
-      body: Center(
-        child: Text('Jerry Can Page Content'),
-      ),
-    );
-  }
-}
-
-// Placeholder for BulkOrderPage, replace with your actual BulkOrderPage implementation
-class BulkOrderPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Bulk Order'),
-      ),
-      body: Center(
-        child: Text('Bulk Order Page Content'),
       ),
     );
   }
