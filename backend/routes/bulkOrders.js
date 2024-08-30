@@ -113,21 +113,31 @@ router.post(
     check('email', 'Valid email is required').isEmail(),
   ],
   async (req, res) => {
+    // Log incoming request
+    console.log('Incoming request to create bulk order:', req.body);
+
+    // Validate request
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('Validation errors:', errors.array());
       return res.status(400).json({ errors: errors.array() });
     }
 
     const { fuelType, quantity, deliveryAddress, mobile, name, email } = req.body;
     const userID = req.user.id;
 
+    console.log('Request validated. Proceeding with order creation.');
+
     try {
       // Calculate total amount based on fuel price and quantity
       const fuelPrice = fuelType === 'petrol' ? fuelPrices.petrol : fuelPrices.diesel;
       const totalAmount = fuelPrice * quantity;
 
+      console.log(`Fuel type: ${fuelType}, Quantity: ${quantity}, Fuel price: ${fuelPrice}, Total amount: ${totalAmount}`);
+
       // Generate unique orderID
       const orderID = uuidv4();
+      console.log('Generated unique orderID:', orderID);
 
       // Create new order
       const newOrder = new BulkOrder({
@@ -142,7 +152,10 @@ router.post(
         email
       });
 
+      // Save the new order to the database
       await newOrder.save();
+      console.log('New order saved successfully:', newOrder);
+
       res.status(201).json(newOrder);
     } catch (err) {
       console.error('Order creation error:', err.message);
