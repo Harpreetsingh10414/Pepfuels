@@ -18,10 +18,10 @@ class _CommonLayoutState extends State<CommonLayout> {
           Navigator.pushReplacementNamed(context, 'fuel');
           break;
         case 1:
-          Navigator.pushReplacementNamed(context, 'jerrycan');
+          Navigator.pushReplacementNamed(context,  'selectState', arguments: {'navigateTo': 'jerrycan'},);
           break;
         case 2:
-          Navigator.pushReplacementNamed(context, 'bulkorder');
+          Navigator.pushReplacementNamed(context,  'selectState', arguments: {'navigateTo': 'bulkorder'},);
           break;
         case 3:
           Navigator.pushReplacementNamed(context, 'profile');
@@ -29,6 +29,8 @@ class _CommonLayoutState extends State<CommonLayout> {
       }
     }
   }
+ 
+
 
   @override
   Widget build(BuildContext context) {

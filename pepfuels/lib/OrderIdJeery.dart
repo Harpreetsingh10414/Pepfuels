@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class OrderId extends StatelessWidget {
+class OrderIdJeery extends StatelessWidget {
   final String orderID;
-  final double quantity;
+  final int quantity;
   final String fuelType;
-  final double totalAmount;
+  final int totalAmount;
   final String deliveryAddress;
   final String mobile;
   final String name;
   final String email;
 
-  const OrderId({
+  const OrderIdJeery({
     Key? key,
     required this.orderID,
     required this.quantity,
