@@ -12,7 +12,7 @@ import 'package:pepfuels/OrderId.dart' as orderid;
 import 'SubmitFormPagebulk.dart'; // Import the updated SubmitFormPagebulk
 import 'SubmitFormPagejeery.dart'; // Import SubmitFormPagejeery
 import 'CommonLayout.dart';
-import 'SelectState.dart'; // Import SelectState page
+import 'SelectState.dart' as selectState; // Import SelectState page
 
 void main() {
   runApp(const MyApp());
@@ -60,12 +60,26 @@ class MyApp extends StatelessWidget {
         'orderid': (context) {
           final args = ModalRoute.of(context)?.settings.arguments
               as Map<String, dynamic>;
-          final selectedLiters = args['selectedLiters'] ?? 0;
+          final orderID = args['orderID'] ?? '';
+          final quantity = args['quantity'] ?? 0;
           final fuelType = args['fuelType'] ?? 'petrol';
+          final totalAmount = args['totalAmount'] ?? 0;
+          final deliveryAddress = args['deliveryAddress'] ?? '';
+          final mobile = args['mobile'] ?? '';
+          final name = args['name'] ?? '';
+          final email = args['email'] ?? '';
 
           return CommonLayout(
             child: orderid.OrderId(
-                selectedLiters: selectedLiters, fuelType: fuelType),
+              orderID: orderID,
+              quantity: quantity,
+              fuelType: fuelType,
+              totalAmount: totalAmount,
+              deliveryAddress: deliveryAddress,
+              mobile: mobile,
+              name: name,
+              email: email,
+            ),
             currentIndex: 0,
           );
         },
@@ -95,7 +109,7 @@ class MyApp extends StatelessWidget {
             totalAmount: totalAmount, // Pass totalAmount to SubmitFormPagejeery
           );
         },
-        'selectState': (context) => SelectState(), // Add SelectState route
+        'selectState': (context) => CommonLayout(child: const selectState.SelectState(), currentIndex: 0), // Add SelectState route
       },
     );
   }

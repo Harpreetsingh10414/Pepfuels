@@ -40,23 +40,15 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
       final mobile = _mobileController.text;
       final email = _emailController.text;
 
-      // Calculate totalAmount
-      final dieselPrice = double.tryParse(widget.dieselPrice) ?? 0.0;
-      final quantity = widget.quantity;
-      final totalAmount = dieselPrice * quantity;
-
       // Prepare the payload for the API request
       final payload = {
-        'fuelType': 'diesel', // Use 'diesel' as provided in the code
-        'quantity': quantity,
+        'fuelType': 'diesel',
+        'quantity': widget.quantity,
         'deliveryAddress': address,
         'mobile': mobile,
         'name': name,
         'email': email,
       };
-
-      print('Payload: $payload');
-      print('Total Amount: $totalAmount');
 
       try {
         // Retrieve the token from SharedPreferences
@@ -76,21 +68,25 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
           Uri.parse('http://184.168.120.64:5000/api/bulkOrders'),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token', // Use the retrieved token
+            'Authorization': 'Bearer $token',
           },
           body: jsonEncode(payload),
         );
 
-        print('Response Status: ${response.statusCode}');
-        print('Response Body: ${response.body}');
-
         if (response.statusCode == 201) {
-          // Order created successfully
+          final responseData = jsonDecode(response.body);
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Order submitted successfully!')),
           );
+
+          // Navigate to OrderId page with the full response
+          Navigator.pushNamed(
+            context,
+            'orderid',
+            arguments: responseData,
+          );
         } else {
-          // Handle error response
           final errorResponse = jsonDecode(response.body);
           setState(() {
             _errorMessage = errorResponse['errors']?.join(', ') ?? 'Something went wrong';
@@ -110,6 +106,11 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
 
   @override
   Widget build(BuildContext context) {
+    final dieselPrice = double.tryParse(widget.dieselPrice) ?? 0.0;
+    final baseAmount = dieselPrice * widget.quantity;
+    final deliveryCharge = 100;
+    final totalAmount = baseAmount + deliveryCharge;
+
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -167,7 +168,15 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
                       ),
                       SizedBox(height: 10),
                       Text(
-                        'Total Amount: ${widget.dieselPrice * widget.quantity} Rs', // Update total amount display
+                        'Delivery Charge: $deliveryCharge Rs', // Display delivery charge
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'Total Amount: $totalAmount Rs', // Display calculated total amount
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

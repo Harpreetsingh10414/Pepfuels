@@ -59,8 +59,7 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
         final token = prefs.getString('jwtToken');
         // Make the POST request
         final response = await http.post(
-          Uri.parse(
-              'http://184.168.120.64:5000/api/jerrycanOrders'), // Ensure this endpoint is correct
+          Uri.parse('http://184.168.120.64:5000/api/jerrycanOrders'), // Ensure this endpoint is correct
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token', // Use the retrieved token
@@ -73,8 +72,17 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
 
         if (response.statusCode == 201) {
           // Order created successfully
+          final responseData = jsonDecode(response.body);
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Order submitted successfully!')),
+          );
+
+          // Navigate to the OrderId page after successful submission
+          Navigator.pushNamed(
+            context,
+            'orderid',
+            arguments: responseData, // Pass the entire response data
           );
         } else {
           // Handle error response
@@ -98,6 +106,10 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
 
   @override
   Widget build(BuildContext context) {
+    // Calculate the total amount with delivery charge
+    final int deliveryCharge = 100;
+    final int totalAmountWithCharge = widget.totalAmount + deliveryCharge;
+
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -155,7 +167,15 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
                       ),
                       SizedBox(height: 10),
                       Text(
-                        'Total Amount: ${widget.totalAmount} Rs',
+                        'Delivery Charge: 100 Rs',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'Total Amount: ${totalAmountWithCharge} Rs',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
