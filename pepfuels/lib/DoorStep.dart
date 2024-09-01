@@ -13,7 +13,7 @@ class DoorStep extends StatelessWidget {
         backgroundColor: const Color(0xFFD3D3D3), // Light gray color for consistency
         title: Center(
           child: Image.asset(
-            '../assets/images/logo.png', // Ensure this path is correct
+            'assets/images/logo.png', // Ensure this path is correct
             width: 200,
             height: 50,
             fit: BoxFit.contain,
@@ -25,7 +25,7 @@ class DoorStep extends StatelessWidget {
         children: <Widget>[
           // Background image
           Image.asset(
-            '../assets/images/background-img-for-all-internal.jpg', // Adjust path as needed
+            'assets/images/background-img-for-all-internal.jpg', // Adjust path as needed
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,

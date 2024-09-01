@@ -47,7 +47,7 @@ class _JerryCanState extends State<JerryCan> {
       appBar: AppBar(
         title: Center(
           child: Image.asset(
-            '../assets/images/logo.png', // Ensure this path is correct
+            'assets/images/logo.png', // Ensure this path is correct
             width: 200,
             height: 50,
             fit: BoxFit.contain,
@@ -77,7 +77,7 @@ class _JerryCanState extends State<JerryCan> {
       body: Stack(
         children: <Widget>[
           Image.asset(
-            '../assets/images/background-img-for-all-internal.jpg', // Ensure this path is correct
+            'assets/images/background-img-for-all-internal.jpg', // Ensure this path is correct
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,

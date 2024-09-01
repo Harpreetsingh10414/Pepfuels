@@ -17,6 +17,22 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   String _errorMessage = '';
 
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus(); // Check if the user is already logged in
+  }
+
+  Future<void> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('jwtToken');
+
+    if (token != null) {
+      // Token exists, navigate to the main page directly
+      Navigator.pushReplacementNamed(context, 'fuel'); // Navigate to the fuel page
+    }
+  }
+
   Future<void> _login() async {
     if (!_loginFormKey.currentState!.validate()) return;
 
@@ -40,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
         final token = responseBody['token'];
 
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('jwtToken', token);
+        await prefs.setString('jwtToken', token); // Save token in SharedPreferences
 
         setState(() {
           _isLoading = false;
@@ -68,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Stack(
         children: <Widget>[
           Image.asset(
-            '../assets/images/background-loginn-pg.jpg', // Replace with your background image path
+            'assets/images/background-loginn-pg.jpg', // Replace with your background image path
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,
@@ -83,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Image.asset(
-                    '../assets/images/logo.png', // Ensure this path is correct
+                    'assets/images/logo.png', // Ensure this path is correct
                     height: 100,
                   ),
                   SizedBox(height: 10),

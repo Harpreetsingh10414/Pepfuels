@@ -114,7 +114,7 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
       appBar: AppBar(
         title: Center(
           child: Image.asset(
-            '../assets/images/logo.png', // Ensure this path is correct
+            'assets/images/logo.png', // Ensure this path is correct
             height: 50,
           ),
         ),
@@ -124,7 +124,7 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
       body: Stack(
         children: <Widget>[
           Image.asset(
-            '../assets/images/background-all-img.jpg', // Ensure this path is correct
+            'assets/images/background-all-img.jpg', // Ensure this path is correct
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,

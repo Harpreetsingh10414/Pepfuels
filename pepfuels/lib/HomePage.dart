@@ -10,7 +10,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Center(
           child: Image.asset(
-            '../assets/images/logo.png', // Ensure this path is correct
+            'assets/images/logo.png', // Ensure this path is correct
             width: 200,
             height: 50,
             fit: BoxFit.contain,
@@ -23,7 +23,7 @@ class HomePage extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           Image.asset(
-            '../assets/images/background-img-for-all-work.webp', // Your background image path
+            'assets/images/background-img-for-all-work.webp', // Your background image path
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,

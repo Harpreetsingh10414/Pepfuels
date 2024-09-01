@@ -17,7 +17,7 @@ class _FuelState extends State<Fuel> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              '../assets/images/logo.png', // Replace with your logo image path
+              'assets/images/logo.png', // Replace with your logo image path
               height: 50, // Adjust the height of the logo as needed
             ),
           ],
@@ -28,7 +28,7 @@ class _FuelState extends State<Fuel> {
         children: <Widget>[
           // Background image
           Image.asset(
-            '../assets/images/background-img-for-all-internal.jpg', // Adjust path as needed
+            'assets/images/background-img-for-all-internal.jpg', // Adjust path as needed
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,

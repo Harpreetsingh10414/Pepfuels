@@ -51,7 +51,7 @@ class _BulkOrderState extends State<BulkOrder> {
       appBar: AppBar(
         title: Center(
           child: Image.asset(
-            '../assets/images/logo.png',
+            'assets/images/logo.png',
             width: 200,
             height: 50,
             fit: BoxFit.contain,
@@ -81,7 +81,7 @@ class _BulkOrderState extends State<BulkOrder> {
       body: Stack(
         children: <Widget>[
           Image.asset(
-            '../assets/images/background-img-for-all-internal.jpg',
+            'assets/images/background-img-for-all-internal.jpg',
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,

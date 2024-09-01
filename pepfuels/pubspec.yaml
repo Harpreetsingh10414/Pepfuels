@@ -44,6 +44,7 @@ dependencies:
   geolocator: ^13.0.1
   location: ^6.0.2
   dropdown_search: ^5.0.0
+  icons_launcher: ^2.1.7
   
 dev_dependencies:
   flutter_test:
@@ -68,8 +69,14 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/images/background-all-img.jpg
+    - assets/images/background-img-for-all-internal.jpg
+    - assets/images/background-img-for-all-work.webp
+    - assets/images/background-loginn-pg.jpg
+    - assets/images/footerall.jpg
+    - assets/images/headerall.jpg
+    - assets/images/logo.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -97,3 +104,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+icons_launcher:
+  image_path: "assets/images/appicon.jpg"
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true

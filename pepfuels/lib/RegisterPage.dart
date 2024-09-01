@@ -74,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
       body: Stack(
         children: <Widget>[
           Image.asset(
-            '../assets/images/background-loginn-pg.jpg', // Replace with your background image path
+            'assets/images/background-loginn-pg.jpg', // Replace with your background image path
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,
@@ -89,7 +89,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Image.asset(
-                    '../assets/images/logo.png', // Ensure this path is correct
+                    'assets/images/logo.png', // Ensure this path is correct
                     height: 100,
                   ),
                   SizedBox(height: 10),

@@ -28,7 +28,7 @@ class OrderId extends StatelessWidget {
       appBar: AppBar(
         title: Center(
           child: Image.asset(
-            '../assets/images/logo.png',
+            'assets/images/logo.png',
             width: 200,
             height: 50,
             fit: BoxFit.contain,
@@ -41,7 +41,7 @@ class OrderId extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           Image.asset(
-            '../assets/images/background-all-img.jpg',
+            'assets/images/background-all-img.jpg',
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,

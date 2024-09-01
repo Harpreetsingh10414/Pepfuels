@@ -39,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:5000/api/profile'), // Update with your backend URL
+        Uri.parse('http://184.168.120.64:5000/api/profile'), // Update with your backend URL
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json', // Ensure Content-Type is set
@@ -78,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: Center(
           child: Image.asset(
-            '../assets/images/logo.png', // Ensure this path is correct
+            'assets/images/logo.png', // Ensure this path is correct
             width: 200,
             height: 50,
             fit: BoxFit.contain,
@@ -91,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: Stack(
         children: <Widget>[
           Image.asset(
-            '../assets/images/background-all-img.jpg', // Ensure this path is correct
+            'assets/images/background-all-img.jpg', // Ensure this path is correct
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,
