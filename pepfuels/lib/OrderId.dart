@@ -1,39 +1,10 @@
 import 'package:flutter/material.dart';
 
 class OrderId extends StatelessWidget {
-  final String orderID;
-  final double quantity;
-  final String fuelType;
-  final double totalAmount;
-  final String deliveryAddress;
-  final String mobile;
-  final String name;
-  final String email;
-
-  const OrderId({
-    Key? key,
-    required this.orderID,
-    required this.quantity,
-    required this.fuelType,
-    required this.totalAmount,
-    required this.deliveryAddress,
-    required this.mobile,
-    required this.name,
-    required this.email,
-  }) : super(key: key);
+  const OrderId({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Debugging information to ensure data is passed correctly
-    print("Order ID: $orderID");
-    print("Quantity: $quantity");
-    print("Fuel Type: $fuelType");
-    print("Total Amount: $totalAmount");
-    print("Delivery Address: $deliveryAddress");
-    print("Mobile: $mobile");
-    print("Name: $name");
-    print("Email: $email");
-
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -42,6 +13,12 @@ class OrderId extends StatelessWidget {
             width: 200,
             height: 50,
             fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) {
+              return Text(
+                'Order Details',
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              );
+            },
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -51,70 +28,56 @@ class OrderId extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           Image.asset(
-            '../assets/images/background-all-img.jpg',
+            '../assets/images/background-loginn-pg.jpg',
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(color: Colors.black);
+            },
           ),
           Container(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withOpacity(0.1),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Text(
-                  'Order Details',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+          SafeArea(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                    size: 100,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 20),
-                buildOrderDetail('Order ID', orderID),
-                buildOrderDetail('Quantity', '$quantity Liters'),
-                buildOrderDetail('Fuel Type', fuelType),
-                buildOrderDetail('Total Amount', '$totalAmount Rs'),
-                buildOrderDetail('Delivery Address', deliveryAddress),
-                buildOrderDetail('Mobile', mobile),
-                buildOrderDetail('Name', name),
-                buildOrderDetail('Email', email),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.popUntil(
-                      context,
-                      ModalRoute.withName('fuel'),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                  SizedBox(height: 20),
+                  Text(
+                    'Your order is successfully placed',
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: const Color.fromARGB(255, 0, 0, 0),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 40), // Space between the message and button
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.popUntil(
+                        context,
+                        ModalRoute.withName('fuel'), // Navigate back to the home page
+                      );
+                    },
                     child: Text('Back to Home'),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 50), // Full-width button
+                      backgroundColor: Colors.green, // Button color
+                    ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 50),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget buildOrderDetail(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: Text(
-        '$label: $value',
-        style: TextStyle(
-          fontSize: 20,
-          color: Colors.white,
-        ),
       ),
     );
   }

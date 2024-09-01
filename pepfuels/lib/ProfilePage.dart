@@ -91,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: Stack(
         children: <Widget>[
           Image.asset(
-            'assets/images/background-all-img.jpg', // Ensure this path is correct
+            'assets/images/background-img-for-all-internal.jpg', // Ensure this path is correct
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,

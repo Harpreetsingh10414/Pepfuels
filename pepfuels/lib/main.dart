@@ -57,32 +57,10 @@ class MyApp extends StatelessWidget {
             currentIndex: 0,
           );
         },
-        'orderid': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments
-              as Map<String, dynamic>;
-          final orderID = args['orderID'] ?? '';
-          final quantity = args['quantity'] ?? 0;
-          final fuelType = args['fuelType'] ?? 'petrol';
-          final totalAmount = args['totalAmount'] ?? 0;
-          final deliveryAddress = args['deliveryAddress'] ?? '';
-          final mobile = args['mobile'] ?? '';
-          final name = args['name'] ?? '';
-          final email = args['email'] ?? '';
-
-          return CommonLayout(
-            child: orderid.OrderId(
-              orderID: orderID,
-              quantity: quantity,
-              fuelType: fuelType,
-              totalAmount: totalAmount,
-              deliveryAddress: deliveryAddress,
-              mobile: mobile,
-              name: name,
-              email: email,
-            ),
-            currentIndex: 0,
-          );
-        },
+        'orderid': (context) => CommonLayout(
+          child: orderid.OrderId(),
+          currentIndex: 0,
+        ),
         'submitFormBulk': (context) {
           final args = ModalRoute.of(context)?.settings.arguments
               as Map<String, dynamic>?;
