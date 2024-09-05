@@ -28,6 +28,9 @@ const router = express.Router();
  *                 phone:
  *                   type: string
  *                   example: 123-456-7890
+ *                 companyName:
+ *                   type: string
+ *                   example: TechCorp
  *       401:
  *         description: Unauthorized
  *       500:
@@ -58,12 +61,13 @@ router.get('/', authMiddleware, async (req, res) => {
  * @access Private
  */
 router.put('/', authMiddleware, async (req, res) => {
-  const { name, phone } = req.body;
+  const { name, phone, companyName } = req.body; // Add companyName to request body
 
   // Build profile object
   const profileFields = {};
   if (name) profileFields.name = name;
   if (phone) profileFields.phone = phone;
+  if (companyName) profileFields.companyName = companyName; // Include companyName
 
   try {
     let user = await User.findById(req.user.id);

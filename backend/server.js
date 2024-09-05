@@ -7,6 +7,7 @@ const petrolPumps = require('./routes/petrolPump');
 const stateRoutes = require('./routes/stateRoutes'); 
 const states = require('./routes/states');
 const dieselPrices = require('./routes/dieselPrices');
+const citiesRoute = require('./routes/cities'); // Import the cities route
 const cors = require('cors'); // Import the cors package
 require('dotenv').config();
 
@@ -44,6 +45,7 @@ app.use('/api/google-places', googlePlaces);
 // app.use('/api/states', stateRoutes);
 app.use('/api/states', states); 
 app.use('/api/dieselPrices', dieselPrices);
+app.use('/api/cities', citiesRoute); // Cities route
 
 // Simple route to fetch users
 app.get('/api/users', async (req, res) => {

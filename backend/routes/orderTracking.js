@@ -17,9 +17,12 @@ const router = express.Router();
  *           type: object
  *           required:
  *             - orderID
+ *             - userID
  *             - status
  *           properties:
  *             orderID:
+ *               type: string
+ *             userID:
  *               type: string
  *             status:
  *               type: string
@@ -27,6 +30,16 @@ const router = express.Router();
  *               type: string
  *             trackingDetails:
  *               type: string
+ *             deliveryAddress:
+ *               type: string
+ *             fuelType:
+ *               type: string
+ *             quantity:
+ *               type: number
+ *             totalAmount:
+ *               type: number
+ *             amount:
+ *               type: number
  *     responses:
  *       201:
  *         description: Tracking entry created successfully
@@ -37,16 +50,22 @@ router.post(
   '/',
   authMiddleware,
   async (req, res) => {
-    const { orderID, status, deliveryDate, trackingDetails, deliveryAddress } = req.body; // Include deliveryAddress
-    console.log('Creating new tracking entry with data:', { orderID, status, deliveryDate, trackingDetails, deliveryAddress });
+    const { orderID, userID, status, deliveryDate, trackingDetails, deliveryAddress, fuelType, quantity, totalAmount, amount } = req.body;
+
+    console.log('Creating new tracking entry with data:', { orderID, userID, status, deliveryDate, trackingDetails, deliveryAddress, fuelType, quantity, totalAmount, amount });
 
     try {
       const newTracking = new OrderTracking({
         orderID,
-        status,
+        userID,
+        status: status || 'Under Processing', // Default to "Under Processing" if not provided
         deliveryDate,
         trackingDetails,
-        deliveryAddress  // Save deliveryAddress
+        deliveryAddress,
+        fuelType,
+        quantity,
+        totalAmount,
+        amount: amount || 0
       });
 
       await newTracking.save();
@@ -58,7 +77,6 @@ router.post(
     }
   }
 );
-
 
 /**
  * @swagger
@@ -119,6 +137,10 @@ router.get('/:orderID', authMiddleware, async (req, res) => {
  *               type: string
  *             trackingDetails:
  *               type: string
+ *             deliveryAddress:
+ *               type: string
+ *             amount:
+ *               type: number
  *     responses:
  *       200:
  *         description: Tracking information updated successfully
@@ -126,8 +148,9 @@ router.get('/:orderID', authMiddleware, async (req, res) => {
  *         description: Order not found
  */
 router.put('/:orderID', authMiddleware, async (req, res) => {
-  const { status, deliveryDate, trackingDetails, deliveryAddress } = req.body; // Include deliveryAddress
-  console.log('Updating tracking information for orderID:', req.params.orderID, 'with data:', { status, deliveryDate, trackingDetails, deliveryAddress });
+  const { status, deliveryDate, trackingDetails, deliveryAddress, amount } = req.body;
+
+  console.log('Updating tracking information for orderID:', req.params.orderID, 'with data:', { status, deliveryDate, trackingDetails, deliveryAddress, amount });
 
   try {
     let trackingInfo = await OrderTracking.findOne({ orderID: req.params.orderID });
@@ -139,7 +162,15 @@ router.put('/:orderID', authMiddleware, async (req, res) => {
     trackingInfo.status = status || trackingInfo.status;
     trackingInfo.deliveryDate = deliveryDate || trackingInfo.deliveryDate;
     trackingInfo.trackingDetails = trackingDetails || trackingInfo.trackingDetails;
-    trackingInfo.deliveryAddress = deliveryAddress || trackingInfo.deliveryAddress; // Update deliveryAddress
+    trackingInfo.deliveryAddress = deliveryAddress || trackingInfo.deliveryAddress;
+    
+    // Update amount and status
+    if (amount !== undefined) {
+      trackingInfo.amount = amount;
+      if (amount === 0) {
+        trackingInfo.status = 'Paid';
+      }
+    }
 
     await trackingInfo.save();
     console.log('Tracking information updated:', trackingInfo);
@@ -149,6 +180,5 @@ router.put('/:orderID', authMiddleware, async (req, res) => {
     res.status(500).send('Server error');
   }
 });
-
 
 module.exports = router;

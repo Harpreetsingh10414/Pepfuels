@@ -28,7 +28,7 @@ class OrderId extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           Image.asset(
-            '../assets/images/background-loginn-pg.jpg',
+            'assets/images/background-loginn-pg.jpg',
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,

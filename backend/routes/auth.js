@@ -13,7 +13,7 @@ const router = express.Router();
  * /api/auth/register:
  *   post:
  *     summary: Register a new user
- *     description: Create a new user with name, email, and password.
+ *     description: Create a new user with name, email, password, and company name.
  *     requestBody:
  *       required: true
  *       content:
@@ -30,6 +30,9 @@ const router = express.Router();
  *               password:
  *                 type: string
  *                 example: password123
+ *               companyName:
+ *                 type: string
+ *                 example: Acme Corp
  *     responses:
  *       200:
  *         description: User registered successfully
@@ -47,6 +50,7 @@ const router = express.Router();
  *         description: Server error
  */
 
+// User Registration Route
 router.post(
   '/register',
   [
@@ -61,7 +65,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, password, phone } = req.body;
+    const { name, email, password, phone, companyName } = req.body;
 
     try {
       let user = await User.findOne({ email });
@@ -75,6 +79,7 @@ router.post(
         email,
         password,
         phone,
+        companyName, // Include companyName in registration
         userId: uuidv4() // Generate a unique userId
       });
 
@@ -95,7 +100,7 @@ router.post(
       jwt.sign(
         payload,
         process.env.JWT_SECRET,
-        { expiresIn: '1h' },
+        { expiresIn: '30d' }, // Set a long expiration time of 30 days
         (err, token) => {
           if (err) throw err;
           res.json({ token });
@@ -106,8 +111,7 @@ router.post(
       res.status(500).send('Server error');
     }
   }
-);
-
+)
 
 
 // User Login Route
@@ -239,16 +243,17 @@ router.post('/logout', authMiddleware, async (req, res) => {
 router.get('/profile', authMiddleware, async (req, res) => {
   console.log('Profile Route: Fetching profile for user:', req.user.id);
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(req.user.id).select('-password'); // Exclude password from the response
     if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
-    res.json(user);
+    res.json(user); // companyName is automatically included here
   } catch (err) {
     console.error('Fetch profile error:', err.message);
     res.status(500).send('Server error');
   }
 });
+
 
 // Update user profile
 router.put(
