@@ -13,6 +13,7 @@ import 'SubmitFormPagebulk.dart'; // Import the updated SubmitFormPagebulk
 import 'SubmitFormPagejeery.dart'; // Import SubmitFormPagejeery
 import 'CommonLayout.dart';
 import 'SelectState.dart' as selectState; // Import SelectState page
+import 'Tracking.dart'; // Import the Tracking page
 
 void main() {
   runApp(const MyApp());
@@ -57,10 +58,16 @@ class MyApp extends StatelessWidget {
             currentIndex: 0,
           );
         },
-        'orderid': (context) => CommonLayout(
-          child: orderid.OrderId(),
-          currentIndex: 0,
-        ),
+        'orderid': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments
+              as Map<String, dynamic>?;
+          final orderId = args?['orderId'] as String? ?? '';
+
+          return CommonLayout(
+            child: orderid.OrderId(orderId: orderId),
+            currentIndex: 0,
+          );
+        },
         'submitFormBulk': (context) {
           final args = ModalRoute.of(context)?.settings.arguments
               as Map<String, dynamic>?;
@@ -84,10 +91,11 @@ class MyApp extends StatelessWidget {
           return SubmitFormPagejeery(
             dieselPrice: dieselPrice,
             quantity: quantity,
-            totalAmount: totalAmount, // Pass totalAmount to SubmitFormPagejeery
+            totalAmount: totalAmount,
           );
         },
         'selectState': (context) => CommonLayout(child: const selectState.SelectState(), currentIndex: 0), // Add SelectState route
+        'tracking': (context) => CommonLayout(child: const TrackingPage(), currentIndex: 0), // Add Tracking route with CommonLayout
       },
     );
   }

@@ -15,6 +15,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String _name = '';
   String _email = '';
   String _phone = '';
+  String _userId = ''; // Added userId variable
   String _errorMessage = '';
 
   @override
@@ -39,7 +40,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://184.168.120.64:5000/api/profile'), // Update with your backend URL
+        Uri.parse(
+            'http://184.168.120.64:5000/api/profile'), // Update with your backend URL
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json', // Ensure Content-Type is set
@@ -55,11 +57,13 @@ class _ProfilePageState extends State<ProfilePage> {
           _name = responseBody['name'] ?? 'No name';
           _email = responseBody['email'] ?? 'No email';
           _phone = responseBody['phone'] ?? 'No phone';
+          _userId = responseBody['userId'] ?? 'No userId'; // Set userId
           _isLoading = false;
         });
       } else {
         setState(() {
-          _errorMessage = 'Failed to load profile. Status code: ${response.statusCode}';
+          _errorMessage =
+              'Failed to load profile. Status code: ${response.statusCode}';
           _isLoading = false;
         });
       }
@@ -135,25 +139,34 @@ class _ProfilePageState extends State<ProfilePage> {
                         _phone.isEmpty ? '' : _phone,
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
-                      SizedBox(height: 20),
-                      ListTile(
-                        leading: Icon(Icons.person, color: Colors.white),
-                        title:
-                            Text('Edit Profile', style: TextStyle(color: Colors.white)),
-                        onTap: () {
-                          // Navigate to Edit Profile Page
-                        },
+                      SizedBox(height: 10),
+                      Text(
+                        _userId.isEmpty
+                            ? ''
+                            : 'User ID: $_userId', // Display userId
+                        style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
+                      SizedBox(height: 20),
                       // ListTile(
-                      //   leading: Icon(Icons.settings, color: Colors.white),
-                      //   title: Text('Settings', style: TextStyle(color: Colors.white)),
+                      //   leading: Icon(Icons.person, color: Colors.white),
+                      //   title: Text('Edit Profile',
+                      //       style: TextStyle(color: Colors.white)),
                       //   onTap: () {
-                      //     // Navigate to Settings Page
+                      //     // Navigate to Edit Profile Page
                       //   },
                       // ),
                       ListTile(
+                        leading: Icon(Icons.track_changes, color: Colors.white),
+                        title: Text('Tracking', // Tracking button
+                            style: TextStyle(color: Colors.white)),
+                        onTap: () {
+                          Navigator.pushNamed(context, 'tracking');
+                        },
+                      ),
+                      ListTile(
                         leading: Icon(Icons.logout, color: Colors.white),
-                        title: Text('Logout', style: TextStyle(color: Colors.white)),
+                        title: Text('Logout',
+                            style: TextStyle(color: Colors.white)),
                         onTap: () async {
                           final prefs = await SharedPreferences.getInstance();
                           await prefs.remove('jwtToken');

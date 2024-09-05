@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart'; // Import shared preferences for token retrieval
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SubmitFormPagejeery extends StatefulWidget {
   final String dieselPrice;
@@ -50,13 +50,11 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
         'email': email,
       };
 
-      print('Payload: $payload');
-      print('Total Amount: ${widget.totalAmount}');
-
       try {
         // Retrieve the token from shared preferences
         final prefs = await SharedPreferences.getInstance();
         final token = prefs.getString('jwtToken');
+
         // Make the POST request
         final response = await http.post(
           Uri.parse('http://184.168.120.64:5000/api/jerrycanOrders'), // Ensure this endpoint is correct
@@ -67,22 +65,20 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
           body: jsonEncode(payload),
         );
 
-        print('Response Status: ${response.statusCode}');
-        print('Response Body: ${response.body}');
-
         if (response.statusCode == 201) {
           // Order created successfully
           final responseData = jsonDecode(response.body);
+          final orderId = responseData['orderId']; // Extract the orderId from response
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Order submitted successfully!')),
           );
 
-          // Navigate to the OrderId page after successful submission
+          // Navigate to the OrderId page with orderId
           Navigator.pushNamed(
             context,
             'orderid',
-            arguments: responseData, // Pass the entire response data
+            arguments: {'orderId': orderId}, // Pass orderId as an argument
           );
         } else {
           // Handle error response

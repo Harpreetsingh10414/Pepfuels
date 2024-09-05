@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 
 class OrderId extends StatelessWidget {
-  const OrderId({Key? key}) : super(key: key);
+  final String orderId;
+
+  // Constructor
+  const OrderId({Key? key, required this.orderId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Debugging print to ensure that the orderId is received
+    print('Order ID received: $orderId');
+
     return Scaffold(
       appBar: AppBar(
         title: Center(
           child: Image.asset(
-            '../assets/images/logo.png',
+            'assets/images/logo.png',
             width: 200,
             height: 50,
             fit: BoxFit.contain,
@@ -28,7 +34,7 @@ class OrderId extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           Image.asset(
-            '../assets/images/background-loginn-pg.jpg',
+            'assets/images/background-loginn-pg.jpg',
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,
@@ -51,26 +57,38 @@ class OrderId extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    'Your order is successfully placed',
+                    'Order ID:',
                     style: TextStyle(
                       fontSize: 24,
-                      color: const Color.fromARGB(255, 0, 0, 0),
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 40), // Space between the message and button
+                  SizedBox(height: 10),
+                  // Display the order ID here or show a default message if it's empty
+                  Text(
+                    orderId.isNotEmpty ? orderId : 'Order ID not found',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 40),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.popUntil(
+                      // Navigate to the 'TrackingPage' when the button is pressed
+                      Navigator.pushNamed(
                         context,
-                        ModalRoute.withName('fuel'), // Navigate back to the home page
+                        'tracking', // Ensure this route is defined in your route settings
+                        arguments: orderId, // Pass the orderId to TrackingPage if needed
                       );
                     },
-                    child: Text('Back to Home'),
+                    child: Text('Track Your Order'),
                     style: ElevatedButton.styleFrom(
-                      minimumSize: Size(double.infinity, 50), // Full-width button
-                      backgroundColor: Colors.green, // Button color
+                      minimumSize: Size(double.infinity, 50),
+                      backgroundColor: Colors.green,
                     ),
                   ),
                 ],
