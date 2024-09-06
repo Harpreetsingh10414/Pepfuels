@@ -57,24 +57,24 @@ class OrderId extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    'Order ID:',
+                    'Order Placed Successfully Check your  order ',
                     style: TextStyle(
                       fontSize: 24,
-                      color: Colors.white,
+                      color: Color.fromARGB(255, 0, 0, 0),
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 10),
                   // Display the order ID here or show a default message if it's empty
-                  Text(
-                    orderId.isNotEmpty ? orderId : 'Order ID not found',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                  // Text(
+                  //   orderId.isNotEmpty ? orderId : 'Order ID not found',
+                  //   style: TextStyle(
+                  //     fontSize: 20,
+                  //     color: Colors.white,
+                  //   ),
+                  //   textAlign: TextAlign.center,
+                  // ),
                   SizedBox(height: 40),
                   ElevatedButton(
                     onPressed: () {
@@ -89,6 +89,7 @@ class OrderId extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 50),
                       backgroundColor: Colors.green,
+                      
                     ),
                   ),
                 ],

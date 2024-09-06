@@ -15,7 +15,8 @@ class _ProfilePageState extends State<ProfilePage> {
   String _name = '';
   String _email = '';
   String _phone = '';
-  String _userId = ''; // Added userId variable
+  String _userId = '';
+  String _companyName = ''; // Added company name variable
   String _errorMessage = '';
 
   @override
@@ -40,11 +41,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
     try {
       final response = await http.get(
-        Uri.parse(
-            'http://184.168.120.64:5000/api/profile'), // Update with your backend URL
+        Uri.parse('http://184.168.120.64:5000/api/profile'), // Update with your backend URL
         headers: {
           'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json', // Ensure Content-Type is set
+          'Content-Type': 'application/json',
         },
       );
 
@@ -57,7 +57,8 @@ class _ProfilePageState extends State<ProfilePage> {
           _name = responseBody['name'] ?? 'No name';
           _email = responseBody['email'] ?? 'No email';
           _phone = responseBody['phone'] ?? 'No phone';
-          _userId = responseBody['userId'] ?? 'No userId'; // Set userId
+          _userId = responseBody['userId'] ?? 'No userId';
+          _companyName = responseBody['companyName'] ?? 'No company name'; // Set company name
           _isLoading = false;
         });
       } else {
@@ -141,23 +142,22 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       SizedBox(height: 10),
                       Text(
+                        _companyName.isEmpty
+                            ? 'No company name'
+                            : 'Company: $_companyName', // Display company name
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
                         _userId.isEmpty
                             ? ''
                             : 'User ID: $_userId', // Display userId
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                       SizedBox(height: 20),
-                      // ListTile(
-                      //   leading: Icon(Icons.person, color: Colors.white),
-                      //   title: Text('Edit Profile',
-                      //       style: TextStyle(color: Colors.white)),
-                      //   onTap: () {
-                      //     // Navigate to Edit Profile Page
-                      //   },
-                      // ),
                       ListTile(
                         leading: Icon(Icons.track_changes, color: Colors.white),
-                        title: Text('Tracking', // Tracking button
+                        title: Text('Tracking',
                             style: TextStyle(color: Colors.white)),
                         onTap: () {
                           Navigator.pushNamed(context, 'tracking');

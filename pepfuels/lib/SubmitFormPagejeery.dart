@@ -28,6 +28,58 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
   bool _isLoading = false;
   String _errorMessage = '';
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserProfile(); // Fetch user profile data on initialization
+  }
+
+  Future<void> _fetchUserProfile() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwtToken');
+
+      if (token == null) {
+        setState(() {
+          _errorMessage = 'No token found. Please log in again.';
+          _isLoading = false;
+        });
+        return;
+      }
+
+      final response = await http.get(
+        Uri.parse('http://184.168.120.64:5000/api/Profile'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final profileData = json.decode(response.body);
+        _nameController.text = profileData['name'] ?? '';
+        _addressController.text = profileData['address'] ?? '';
+        _mobileController.text = profileData['phone'] ?? '';
+        _emailController.text = profileData['email'] ?? '';
+      } else {
+        setState(() {
+          _errorMessage = 'Failed to fetch user profile. Status code: ${response.statusCode}';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error fetching profile: ${e.toString()}';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   Future<void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
       setState(() {
