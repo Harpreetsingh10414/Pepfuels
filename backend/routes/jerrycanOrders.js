@@ -5,12 +5,6 @@ const JerrycanOrder = require('../models/JerrycanOrder');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
 
-// Mock data for fuel prices
-const fuelPrices = {
-  petrol: 94.72,  // Example price per liter
-  diesel: 87.62,  // Example price per liter
-};
-
 /**
  * @swagger
  * /api/jerrycanOrders:
@@ -30,6 +24,7 @@ const fuelPrices = {
  *             - mobile
  *             - name
  *             - email
+ *             - totalAmount
  *           properties:
  *             fuelType:
  *               type: string
@@ -43,6 +38,8 @@ const fuelPrices = {
  *               type: string
  *             email:
  *               type: string
+ *             totalAmount:
+ *               type: number
  *     responses:
  *       201:
  *         description: Order created successfully
@@ -59,6 +56,7 @@ router.post(
     check('mobile', 'Mobile number is required').not().isEmpty(),
     check('name', 'Name is required').not().isEmpty(),
     check('email', 'Valid email is required').isEmail(),
+    check('totalAmount', 'Total amount is required').isNumeric(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -66,14 +64,10 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { fuelType, quantity, deliveryAddress, mobile, name, email } = req.body;
+    const { fuelType, quantity, deliveryAddress, mobile, name, email, totalAmount } = req.body;
     const userID = req.user.id;
 
     try {
-      // Calculate total amount based on fuel price and quantity
-      const fuelPrice = fuelType === 'petrol' ? fuelPrices.petrol : fuelPrices.diesel;
-      const totalAmount = fuelPrice * quantity;
-
       // Generate unique orderID
       const orderID = uuidv4();
 
@@ -83,7 +77,7 @@ router.post(
         userID,
         fuelType,
         quantity,
-        totalAmount,
+        totalAmount, // Use the amount passed from the frontend
         deliveryAddress,
         mobile,
         name,

@@ -4,6 +4,8 @@ const authMiddleware = require('../middleware/auth');
 const BulkOrder = require('../models/BulkOrder');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
+
+// Import mock fuel prices (if still needed for reference)
 const fuelPrices = require('../mockFuelPrices'); // Import mock fuel prices
 
 /**
@@ -25,6 +27,7 @@ const fuelPrices = require('../mockFuelPrices'); // Import mock fuel prices
  *               - mobile
  *               - name
  *               - email
+ *               - totalAmount
  *             properties:
  *               fuelType:
  *                 type: string
@@ -46,6 +49,9 @@ const fuelPrices = require('../mockFuelPrices'); // Import mock fuel prices
  *                 type: string
  *                 format: email
  *                 description: Email of the person placing the order.
+ *               totalAmount:
+ *                 type: number
+ *                 description: Total amount of the order calculated by the frontend.
  *     responses:
  *       201:
  *         description: Order created successfully
@@ -111,6 +117,7 @@ router.post(
     check('mobile', 'Mobile number is required').not().isEmpty(),
     check('name', 'Name is required').not().isEmpty(),
     check('email', 'Valid email is required').isEmail(),
+    check('totalAmount', 'Total amount is required').isNumeric(),
   ],
   async (req, res) => {
     // Log incoming request
@@ -123,18 +130,12 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { fuelType, quantity, deliveryAddress, mobile, name, email } = req.body;
+    const { fuelType, quantity, deliveryAddress, mobile, name, email, totalAmount } = req.body;
     const userID = req.user.id;
 
     console.log('Request validated. Proceeding with order creation.');
 
     try {
-      // Calculate total amount based on fuel price and quantity
-      const fuelPrice = fuelType === 'petrol' ? fuelPrices.petrol : fuelPrices.diesel;
-      const totalAmount = fuelPrice * quantity;
-
-      console.log(`Fuel type: ${fuelType}, Quantity: ${quantity}, Fuel price: ${fuelPrice}, Total amount: ${totalAmount}`);
-
       // Generate unique orderID
       const orderID = uuidv4();
       console.log('Generated unique orderID:', orderID);
@@ -145,7 +146,7 @@ router.post(
         userID,
         fuelType,
         quantity,
-        totalAmount,
+        totalAmount, // Use the amount passed from the frontend
         deliveryAddress,
         mobile,
         name,
