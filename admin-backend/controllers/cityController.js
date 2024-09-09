@@ -57,3 +57,15 @@ exports.updateDieselPrice = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+// 4.3 Get All Cities
+exports.getAllCities = async (req, res) => {
+  try {
+    const cities = await City.find({});
+    console.log('Retrieved all cities:', cities);
+    res.json(cities);
+  } catch (err) {
+    console.error('Error retrieving cities:', err.message);
+    res.status(500).send('Server error');
+  }
+};

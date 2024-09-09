@@ -69,6 +69,20 @@ exports.getOrderTracking = async (req, res) => {
   }
 };
 
+// Get All Order Trackings
+exports.getAllOrderTrackings = async (req, res) => {
+  console.log('Fetching all order tracking entries.');
+
+  try {
+    const allOrderTrackings = await OrderTracking.find({});
+    console.log('All order tracking entries retrieved:', allOrderTrackings);
+    res.json(allOrderTrackings);
+  } catch (err) {
+    console.error('Fetching all order tracking entries error:', err.message);
+    res.status(500).send('Server error');
+  }
+};
+
 // Update Order Tracking by Order ID
 exports.updateOrderTracking = async (req, res) => {
   const { status, deliveryDate, trackingDetails, deliveryAddress, amount } = req.body;

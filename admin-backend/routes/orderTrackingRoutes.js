@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   createOrderTracking,
   getOrderTracking,
+  getAllOrderTrackings,
   updateOrderTracking,
 } = require('../controllers/orderTrackingController');
 
@@ -13,6 +14,59 @@ const {
  *   name: OrderTracking
  *   description: API for managing order tracking
  */
+
+/**
+ * @swagger
+ * /api/ordertracking/all:
+ *   get:
+ *     summary: Get all order tracking entries
+ *     description: Retrieve all order tracking entries.
+ *     tags: [OrderTracking]
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved all order tracking entries.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   orderID:
+ *                     type: string
+ *                     description: Unique order identifier.
+ *                   userID:
+ *                     type: string
+ *                     description: ID of the user who placed the order.
+ *                   status:
+ *                     type: string
+ *                     description: Order status.
+ *                   deliveryDate:
+ *                     type: string
+ *                     format: date-time
+ *                     description: Delivery date.
+ *                   trackingDetails:
+ *                     type: string
+ *                     description: Tracking details.
+ *                   deliveryAddress:
+ *                     type: string
+ *                     description: Delivery address.
+ *                   fuelType:
+ *                     type: string
+ *                     description: Fuel type.
+ *                   quantity:
+ *                     type: number
+ *                     description: Quantity ordered.
+ *                   totalAmount:
+ *                     type: number
+ *                     description: Total amount.
+ *                   amount:
+ *                     type: number
+ *                     description: Remaining amount to be paid.
+ *       500:
+ *         description: Server error.
+ */
+router.get('/all', getAllOrderTrackings);
 
 /**
  * @swagger

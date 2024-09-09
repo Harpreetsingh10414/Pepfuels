@@ -41,7 +41,7 @@ app.use('/api/profile', require('./routes/profile'));
 app.use('/api/fuelPrices', require('./routes/fuelPrices'));
 app.use('/api/jerrycanOrders', require('./routes/jerrycanOrders'));
 app.use('/api/bulkOrders', require('./routes/bulkOrders'));
-app.use('/api/ordertrackings', require('./routes/orders')); // Corrected route for order tracking
+app.use('/api/orderTracking', orderTrackingRoute); // Corrected route for order tracking
 app.use('/api/petrolPumps', petrolPumps);
 app.use('/api/google-places', googlePlaces);
 app.use('/api/states', states); 
@@ -60,17 +60,10 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
-// Function to log fuel prices
-// const logFuelPrices = () => {
-//   const { petrol, diesel } = fuelPrices;
-//   console.log(`Current Fuel Prices - Petrol: ${petrol}, Diesel: ${diesel}`);
-// };
-
 const PORT = process.env.PORT || 5000;
 
+// Listen on all network interfaces and specific IP
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://184.168.120.64:${PORT}`);
   console.log(`Swagger documentation available at http://184.168.120.64:${PORT}/api-docs`);
-  // console.log('Fuel Prices:', fuelPrices); // Debugging
-  // logFuelPrices(); // Log fuel prices when the server starts
 });
