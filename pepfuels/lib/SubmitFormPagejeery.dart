@@ -92,6 +92,10 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
       final mobile = _mobileController.text;
       final email = _emailController.text;
 
+      // Calculate the total amount with delivery charge
+      final int deliveryCharge = 100;
+      final int totalAmountWithCharge = widget.totalAmount + deliveryCharge;
+
       // Prepare the payload for the API request
       final payload = {
         'fuelType': 'diesel',
@@ -100,6 +104,7 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
         'mobile': mobile,
         'name': name,
         'email': email,
+        'totalAmount': totalAmountWithCharge,  // Added totalAmount field
       };
 
       try {
@@ -307,7 +312,7 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your email';
                           }
-                          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+$')
+                          if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
                               .hasMatch(value)) {
                             return 'Please enter a valid email address';
                           }
@@ -315,21 +320,18 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
                         },
                       ),
                       SizedBox(height: 20),
-                      _isLoading
-                          ? CircularProgressIndicator()
-                          : ElevatedButton(
-                              onPressed: _submitForm,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Text('Submit'),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(double.infinity, 50),
-                              ),
-                            ),
+                      ElevatedButton(
+                        onPressed: _isLoading ? null : _submitForm,
+                        child: _isLoading
+                            ? CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white),
+                              )
+                            : Text('Submit'),
+                      ),
                       if (_errorMessage.isNotEmpty)
                         Padding(
-                          padding: const EdgeInsets.only(top: 20),
+                          padding: const EdgeInsets.only(top: 10.0),
                           child: Text(
                             _errorMessage,
                             style: TextStyle(color: Colors.red),

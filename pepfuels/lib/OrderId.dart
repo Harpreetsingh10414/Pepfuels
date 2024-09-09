@@ -57,7 +57,7 @@ class OrderId extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    'Order Placed Successfully Check your  order ',
+                    'Order Placed Successfully Your Order Will be Update Shortlly in  order tracking page ... ',
                     style: TextStyle(
                       fontSize: 24,
                       color: Color.fromARGB(255, 0, 0, 0),

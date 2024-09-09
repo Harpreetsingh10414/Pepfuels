@@ -144,7 +144,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Text(
                         _companyName.isEmpty
                             ? 'No company name'
-                            : 'Company: $_companyName', // Display company name
+                            : ' $_companyName', // Display company name
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                       SizedBox(height: 10),

@@ -92,6 +92,12 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
       final mobile = _mobileController.text;
       final email = _emailController.text;
 
+      // Calculate total amount
+      final dieselPrice = double.tryParse(widget.dieselPrice) ?? 0.0;
+      final baseAmount = dieselPrice * widget.quantity;
+      final deliveryCharge = 100;
+      final totalAmount = baseAmount + deliveryCharge;
+
       // Prepare the payload for the API request
       final payload = {
         'fuelType': 'diesel',
@@ -100,6 +106,7 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
         'mobile': mobile,
         'name': name,
         'email': email,
+        'totalAmount': totalAmount,
       };
 
       try {

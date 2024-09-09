@@ -7,7 +7,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
+     appBar: AppBar(
         title: Center(
           child: Image.asset(
             'assets/images/logo.png', // Ensure this path is correct
@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
             fit: BoxFit.contain,
           ),
         ),
-        backgroundColor: Colors.transparent,
+          backgroundColor: Color(0xFFD3D3D3),
         elevation: 0,
         automaticallyImplyLeading: false,
       ),
