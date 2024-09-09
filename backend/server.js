@@ -9,6 +9,7 @@ const states = require('./routes/states');
 const dieselPrices = require('./routes/dieselPrices');
 const citiesRoute = require('./routes/cities'); // Import the cities route
 const ordersRoute = require('./routes/orders'); // Import the orders route
+const orderTrackingRoute = require('./routes/orderTracking'); // Import the orderTracking route
 
 const cors = require('cors'); // Import the cors package
 require('dotenv').config();
@@ -40,7 +41,7 @@ app.use('/api/profile', require('./routes/profile'));
 app.use('/api/fuelPrices', require('./routes/fuelPrices'));
 app.use('/api/jerrycanOrders', require('./routes/jerrycanOrders'));
 app.use('/api/bulkOrders', require('./routes/bulkOrders'));
-app.use('/api/orderTracking', require('./routes/orderTracking'));
+app.use('/api/ordertrackings', require('./routes/orders')); // Corrected route for order tracking
 app.use('/api/petrolPumps', petrolPumps);
 app.use('/api/google-places', googlePlaces);
 app.use('/api/states', states); 
@@ -68,8 +69,8 @@ app.get('/api/users', async (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Swagger documentation available at http://localhost:${PORT}/api-docs`);
+  console.log(`Server running on http://184.168.120.64:${PORT}`);
+  console.log(`Swagger documentation available at http://184.168.120.64:${PORT}/api-docs`);
   // console.log('Fuel Prices:', fuelPrices); // Debugging
   // logFuelPrices(); // Log fuel prices when the server starts
 });

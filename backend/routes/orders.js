@@ -1,6 +1,5 @@
 const express = require('express');
-const authMiddleware = require('../middleware/auth'); // Authentication middleware
-const OrderTracking = require('../models/OrderTracking'); // Import the OrderTracking model
+const OrderTracking = require('../models/orderTracking'); // Import the OrderTracking model
 const router = express.Router();
 
 /**
@@ -58,9 +57,9 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
-router.get('/user/:userID', authMiddleware, async (req, res) => {
+router.get('/user/:userID', async (req, res) => {
   const { userID } = req.params;
-  
+
   console.log('Fetching order tracking details for userID:', userID);
 
   try {
@@ -71,7 +70,7 @@ router.get('/user/:userID', authMiddleware, async (req, res) => {
       console.log('No order tracking details found for userID:', userID);
       return res.status(404).json({ msg: 'No order tracking details found for this user' });
     }
-    
+
     console.log('Order tracking details retrieved:', orderTrackings);
     res.json(orderTrackings);
   } catch (err) {
