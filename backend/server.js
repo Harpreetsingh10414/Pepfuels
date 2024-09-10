@@ -10,6 +10,8 @@ const dieselPrices = require('./routes/dieselPrices');
 const citiesRoute = require('./routes/cities'); // Import the cities route
 const ordersRoute = require('./routes/orders'); // Import the orders route
 const orderTrackingRoute = require('./routes/orderTracking'); // Import the orderTracking route
+const orderByUserIdRoute = require('./routes/orderByUserIDRoutes'); // Correct import
+
 
 const cors = require('cors'); // Import the cors package
 require('dotenv').config();
@@ -48,6 +50,8 @@ app.use('/api/states', states);
 app.use('/api/dieselPrices', dieselPrices);
 app.use('/api/cities', citiesRoute); // Cities route
 app.use('/api/orders', ordersRoute); // Orders route
+app.use('/api/orderByUserId', orderByUserIdRoute); // New route for fetching orders by userID
+
 
 // Simple route to fetch users
 app.get('/api/users', async (req, res) => {

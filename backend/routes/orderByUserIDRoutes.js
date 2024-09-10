@@ -1,13 +1,13 @@
 const express = require('express');
-const OrderTracking = require('../models/orderTracking'); // Import the OrderTracking model
+const OrderByUserID = require('../models/orderByUserID'); // Import the OrderByUserID model
 const router = express.Router();
 
 /**
  * @swagger
- * /api/ordertrackings/user/{userID}:
+ * /api/orders/user/{userID}:
  *   get:
- *     summary: Get all order tracking details for a specific user
- *     description: Fetch all order tracking details related to the specified userID.
+ *     summary: Get all orders for a specific user
+ *     description: Fetch all orders related to the specified userID.
  *     parameters:
  *       - in: path
  *         name: userID
@@ -16,7 +16,7 @@ const router = express.Router();
  *           type: string
  *     responses:
  *       200:
- *         description: List of order tracking details for the specified user
+ *         description: List of orders for the specified user
  *         content:
  *           application/json:
  *             schema:
@@ -53,28 +53,30 @@ const router = express.Router();
  *                     type: string
  *                     format: date-time
  *       404:
- *         description: No order tracking details found for the user
+ *         description: No orders found for the user
  *       500:
  *         description: Server error
  */
 router.get('/user/:userID', async (req, res) => {
   const { userID } = req.params;
 
-  console.log('Fetching order tracking details for userID:', userID);
+  console.log('Fetching all orders for userID:', userID);
 
   try {
-    // Fetch all order tracking details for the given userID
-    const orderTrackings = await OrderTracking.find({ userID }).sort({ createdAt: -1 });
+    // Fetch all orders for the given userID
+    const orders = await OrderByUserID.find({ userID }).sort({ createdAt: -1 });
 
-    if (orderTrackings.length === 0) {
-      console.log('No order tracking details found for userID:', userID);
-      return res.status(404).json({ msg: 'No order tracking details found for this user' });
+    console.log('Fetched orders:', orders); 
+
+    if (orders.length === 0) {
+      console.log('No orders found for userID:', userID);
+      return res.status(404).json({ msg: 'No orders found for this user' });
     }
 
-    console.log('Order tracking details retrieved:', orderTrackings);
-    res.json(orderTrackings);
+    console.log('Orders retrieved:', orders);
+    res.json(orders);
   } catch (err) {
-    console.error('Error fetching order tracking details for userID:', err.message);
+    console.error('Error fetching orders for userID:', err.message);
     res.status(500).send('Server error');
   }
 });
