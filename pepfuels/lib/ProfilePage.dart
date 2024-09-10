@@ -169,7 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             style: TextStyle(color: Colors.white)),
                         onTap: () async {
                           final prefs = await SharedPreferences.getInstance();
-                          await prefs.remove('jwtToken');
+                          await prefs.clear(); // Clear all stored preferences
                           Navigator.pushReplacementNamed(context, '/');
                         },
                       ),

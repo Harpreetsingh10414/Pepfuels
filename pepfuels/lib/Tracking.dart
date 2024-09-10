@@ -72,20 +72,13 @@ class _TrackingPageState extends State<TrackingPage> {
       }
     }
 
-    // Debugging: Print the userId and URL to verify correctness
-    print('Using User ID: $userId');
-    print('Tracking API URL: http://184.168.120.64:5000/api/ordertrackings/user/$userId');
-
     try {
       final response = await http.get(
-        Uri.parse('http://184.168.120.64:5000/api/ordertrackings/user/$userId'),
+        Uri.parse('http://184.168.120.64:5000/api/orderByUserId/user/$userId'),
         headers: {
           'Authorization': 'Bearer $token',
         },
       );
-
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
@@ -94,9 +87,9 @@ class _TrackingPageState extends State<TrackingPage> {
           _isLoading = false;
         });
       } else {
-        // Add more details to the error message
         setState(() {
-          _errorMessage = 'Failed to load orders. Status code: ${response.statusCode}, Response body: ${response.body}';
+          // _errorMessage = 'Failed to load orders. Status code: ${response.statusCode}, Response body: ${response.body}';
+          _errorMessage = 'Your Order Will be Update Shortly Please Wait For a While  Thankyou!';
           _isLoading = false;
         });
       }
@@ -112,23 +105,112 @@ class _TrackingPageState extends State<TrackingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tracking'),
-        backgroundColor: Colors.blue, // Adjust color as needed
+      title: Center(
+          child: Image.asset(
+            'assets/images/logo.png', // Ensure this path is correct
+            width: 200,
+            height: 50,
+            fit: BoxFit.contain,
+          ),
+        ),
+             backgroundColor: Colors.transparent,
+        elevation: 0,
+        automaticallyImplyLeading: false,
       ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : _errorMessage.isNotEmpty
-              ? Center(child: Text(_errorMessage, style: TextStyle(color: Colors.red)))
-              : ListView.builder(
-                  itemCount: _orders.length,
-                  itemBuilder: (context, index) {
-                    final order = _orders[index];
-                    return ListTile(
-                      title: Text('Order ID: ${order['_id']}'),
-                      subtitle: Text('Details: ${order['details']}'), // Adjust according to your order data
-                    );
-                  },
-                ),
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/background-img-for-all-internal.jpg'), // Background image
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _errorMessage.isNotEmpty
+                  ? Center(
+                      child: Text(
+                        _errorMessage,
+                        style: const TextStyle(color: Colors.red, fontSize: 16),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: _orders.length,
+                      itemBuilder: (context, index) {
+                        final order = _orders[index];
+
+                        return Card(
+                          elevation: 5,
+                          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Colors.purpleAccent, Colors.deepPurple],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Order ID: ${order['orderID']}',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Status: ${order['status']}',
+                                  style: TextStyle(fontSize: 16, color: Colors.white70),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Delivery Date: ${order['deliveryDate']}',
+                                  style: TextStyle(fontSize: 16, color: Colors.white70),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Fuel Type: ${order['fuelType']}',
+                                  style: TextStyle(fontSize: 16, color: Colors.white70),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Quantity: ${order['quantity']} liters',
+                                  style: TextStyle(fontSize: 16, color: Colors.white70),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Total Amount: ${order['totalAmount']}',
+                                  style: TextStyle(fontSize: 16, color: Colors.white70),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Delivery Address: ${order['deliveryAddress']}',
+                                  style: TextStyle(fontSize: 16, color: Colors.white70),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Tracking Details: ${order['trackingDetails']}',
+                                  style: TextStyle(fontSize: 16, color: Colors.white70),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+        ],
+      ),
     );
   }
 }
