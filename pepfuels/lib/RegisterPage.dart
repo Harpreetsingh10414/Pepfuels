@@ -17,6 +17,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _companyNameController = TextEditingController();  // New controller for company name
   bool _isLoading = false;
   String _errorMessage = '';
   String? _password;
@@ -38,6 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
           'email': _emailController.text,
           'phone': _phoneController.text,
           'password': _passwordController.text,
+          'companyName': _companyNameController.text,  // Include company name in the request body
         }),
       );
 
@@ -177,6 +179,26 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         SizedBox(height: 20),
                         TextFormField(
+                          controller: _companyNameController,  // Company name input field
+                          decoration: InputDecoration(
+                            labelText: 'Company Name',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 20),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your company name';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        TextFormField(
                           controller: _passwordController,
                           decoration: InputDecoration(
                             labelText: 'Password',
@@ -260,10 +282,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: Text(
                             'Already have an account? Login here',
                             style: TextStyle(
-                              color: const Color.fromARGB(255, 0, 0, 0),
-                              decoration: TextDecoration.underline,
-                              fontSize: 17,
-                              
+                              color: const Color(0xff4f4f4f),
+                              fontSize: 16,
                             ),
                           ),
                         ),
@@ -277,15 +297,5 @@ class _RegisterPageState extends State<RegisterPage> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    super.dispose();
   }
 }

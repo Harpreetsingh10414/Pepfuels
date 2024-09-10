@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart'; // Import shared preferences for token retrieval
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SubmitFormPagejeery extends StatefulWidget {
   final String dieselPrice;
@@ -28,6 +28,58 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
   bool _isLoading = false;
   String _errorMessage = '';
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserProfile(); // Fetch user profile data on initialization
+  }
+
+  Future<void> _fetchUserProfile() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwtToken');
+
+      if (token == null) {
+        setState(() {
+          _errorMessage = 'No token found. Please log in again.';
+          _isLoading = false;
+        });
+        return;
+      }
+
+      final response = await http.get(
+        Uri.parse('http://184.168.120.64:5000/api/Profile'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final profileData = json.decode(response.body);
+        _nameController.text = profileData['name'] ?? '';
+        _addressController.text = profileData['address'] ?? '';
+        _mobileController.text = profileData['phone'] ?? '';
+        _emailController.text = profileData['email'] ?? '';
+      } else {
+        setState(() {
+          _errorMessage = 'Failed to fetch user profile. Status code: ${response.statusCode}';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error fetching profile: ${e.toString()}';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   Future<void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
       setState(() {
@@ -40,6 +92,10 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
       final mobile = _mobileController.text;
       final email = _emailController.text;
 
+      // Calculate the total amount with delivery charge
+      final int deliveryCharge = 100;
+      final int totalAmountWithCharge = widget.totalAmount + deliveryCharge;
+
       // Prepare the payload for the API request
       final payload = {
         'fuelType': 'diesel',
@@ -48,15 +104,14 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
         'mobile': mobile,
         'name': name,
         'email': email,
+        'totalAmount': totalAmountWithCharge,  // Added totalAmount field
       };
-
-      print('Payload: $payload');
-      print('Total Amount: ${widget.totalAmount}');
 
       try {
         // Retrieve the token from shared preferences
         final prefs = await SharedPreferences.getInstance();
         final token = prefs.getString('jwtToken');
+
         // Make the POST request
         final response = await http.post(
           Uri.parse('http://184.168.120.64:5000/api/jerrycanOrders'), // Ensure this endpoint is correct
@@ -67,22 +122,20 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
           body: jsonEncode(payload),
         );
 
-        print('Response Status: ${response.statusCode}');
-        print('Response Body: ${response.body}');
-
         if (response.statusCode == 201) {
           // Order created successfully
           final responseData = jsonDecode(response.body);
+          final orderId = responseData['orderId']; // Extract the orderId from response
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Order submitted successfully!')),
           );
 
-          // Navigate to the OrderId page after successful submission
+          // Navigate to the OrderId page with orderId
           Navigator.pushNamed(
             context,
             'orderid',
-            arguments: responseData, // Pass the entire response data
+            arguments: {'orderId': orderId}, // Pass orderId as an argument
           );
         } else {
           // Handle error response
@@ -259,7 +312,7 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your email';
                           }
-                          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+$')
+                          if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
                               .hasMatch(value)) {
                             return 'Please enter a valid email address';
                           }
@@ -267,21 +320,18 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
                         },
                       ),
                       SizedBox(height: 20),
-                      _isLoading
-                          ? CircularProgressIndicator()
-                          : ElevatedButton(
-                              onPressed: _submitForm,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Text('Submit'),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(double.infinity, 50),
-                              ),
-                            ),
+                      ElevatedButton(
+                        onPressed: _isLoading ? null : _submitForm,
+                        child: _isLoading
+                            ? CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white),
+                              )
+                            : Text('Submit'),
+                      ),
                       if (_errorMessage.isNotEmpty)
                         Padding(
-                          padding: const EdgeInsets.only(top: 20),
+                          padding: const EdgeInsets.only(top: 10.0),
                           child: Text(
                             _errorMessage,
                             style: TextStyle(color: Colors.red),

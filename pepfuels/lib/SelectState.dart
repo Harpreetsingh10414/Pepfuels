@@ -1,52 +1,99 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectState extends StatefulWidget {
-   const SelectState({super.key});
+  const SelectState({super.key});
+
   @override
   _SelectStateState createState() => _SelectStateState();
 }
 
 class _SelectStateState extends State<SelectState> {
-  List<String> states = [];
-  String? selectedState;
+  List<Map<String, dynamic>> cities = [];
+  String? selectedCity;
   String dieselPrice = '';
+  TextEditingController searchController = TextEditingController();
+  bool isLoading = true;
+  String errorMessage = '';
 
   @override
   void initState() {
     super.initState();
-    fetchStates();
+    fetchCities();
+
+    // Add listener to the searchController
+    searchController.addListener(() {
+      setState(() {
+        selectedCity = searchController.text;
+      });
+    });
   }
 
-  Future<void> fetchStates() async {
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> fetchCities() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('jwtToken');
+
+    if (token == null) {
+      setState(() {
+        errorMessage = 'No token found. Please log in again.';
+        isLoading = false;
+      });
+      return;
+    }
+
     try {
-      final response = await http.get(Uri.parse('http://184.168.120.64:5000/api/states'));
+      final response = await http.get(
+        Uri.parse('http://184.168.120.64:5000/api/cities'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
       if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
         setState(() {
-          states = List<String>.from(json.decode(response.body)); // Assuming API returns a list of state names
+          cities = (responseBody as List).map((city) {
+            return {
+              'name': city['name'],
+              'dieselPrice': city['dieselPrice'] is int
+                ? (city['dieselPrice'] as int).toDouble()
+                : city['dieselPrice'] as double,
+            };
+          }).toList();
+          isLoading = false;
         });
       } else {
-        // Handle error
+        setState(() {
+          errorMessage = 'Failed to load cities. Status code: ${response.statusCode}';
+          isLoading = false;
+        });
       }
     } catch (e) {
-      // Handle error
+      setState(() {
+        errorMessage = 'An error occurred: $e';
+        isLoading = false;
+      });
     }
   }
 
-  Future<void> fetchDieselPrice(String state) async {
-    try {
-      final response = await http.get(Uri.parse('http://184.168.120.64:5000/api/dieselPrices/$state'));
-      if (response.statusCode == 200) {
-        setState(() {
-          dieselPrice = json.decode(response.body)['price'].toString(); // Assuming API returns {"price": value}
-        });
-      } else {
-        // Handle error
-      }
-    } catch (e) {
-      // Handle error
-    }
+  void fetchDieselPrice(String cityName) {
+    final selectedCityData = cities.firstWhere(
+      (city) => city['name'] == cityName,
+      orElse: () => {'dieselPrice': 0.0},
+    );
+    setState(() {
+      dieselPrice = selectedCityData['dieselPrice'].toString();
+    });
   }
 
   void handleSubmit() {
@@ -66,34 +113,32 @@ class _SelectStateState extends State<SelectState> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFD3D3D3), // Light gray color for consistency
+        backgroundColor: const Color(0xFFD3D3D3),
         title: Center(
           child: Image.asset(
-            'assets/images/logo.png', // Ensure this path is correct
+            'assets/images/logo.png',
             width: 200,
             height: 50,
             fit: BoxFit.contain,
           ),
         ),
-        automaticallyImplyLeading: false, // To center title without a leading widget
+        automaticallyImplyLeading: false,
       ),
       body: Stack(
         children: <Widget>[
-          // Background image
           Image.asset(
-            'assets/images/background-img-for-all-internal.jpg', // Adjust path as needed
+            'assets/images/background-img-for-all-internal.jpg',
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,
           ),
           Container(
-            color: Colors.black.withOpacity(0.3), // Overlay for text visibility
+            color: Colors.black.withOpacity(0.3),
           ),
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Gradient content container
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32.0),
                   child: Container(
@@ -114,7 +159,7 @@ class _SelectStateState extends State<SelectState> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Select State',
+                          'Select City',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 24,
@@ -124,7 +169,7 @@ class _SelectStateState extends State<SelectState> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          "Choose a state to see the diesel price.",
+                          "Choose a city to see the diesel price.",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,
@@ -132,27 +177,48 @@ class _SelectStateState extends State<SelectState> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        DropdownButton<String>(
-                          value: selectedState,
-                          hint: Text('Select a state'),
-                          dropdownColor: Colors.black, // Dropdown background color
-                          style: TextStyle(color: Colors.white), // Dropdown text color
-                          items: states.map((String state) {
-                            return DropdownMenuItem<String>(
-                              value: state,
-                              child: Text(state),
-                            );
-                          }).toList(),
-                          onChanged: (String? newState) {
-                            setState(() {
-                              selectedState = newState;
-                              dieselPrice = ''; // Reset diesel price when state changes
-                            });
-                            if (newState != null) {
-                              fetchDieselPrice(newState);
-                            }
-                          },
-                        ),
+                        isLoading
+                          ? Center(child: CircularProgressIndicator())
+                          : DropdownSearch<String>(
+                              items: cities.map((city) => city['name'] as String).toList(),
+                              selectedItem: selectedCity,
+                              onChanged: (String? newCity) {
+                                setState(() {
+                                  selectedCity = newCity;
+                                  dieselPrice = '';
+                                  searchController.text = newCity ?? ''; // Update the text field with the selected city
+                                });
+                                if (newCity != null) {
+                                  fetchDieselPrice(newCity);
+                                }
+                              },
+                              dropdownDecoratorProps: DropDownDecoratorProps(
+                                dropdownSearchDecoration: InputDecoration(
+                                  labelText: "Select a city",
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  labelStyle: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                              ),
+                              popupProps: PopupProps.menu(
+                                showSearchBox: true,
+                                searchFieldProps: TextFieldProps(
+                                  controller: searchController, // Attach the controller
+                                  autofocus: true,
+                                  decoration: InputDecoration(
+                                    hintText: "Search or enter a city",
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                         SizedBox(height: 20),
                         if (dieselPrice.isNotEmpty)
                           Text(
@@ -163,7 +229,8 @@ class _SelectStateState extends State<SelectState> {
                         ElevatedButton(
                           onPressed: dieselPrice.isNotEmpty ? handleSubmit : null,
                           style: ElevatedButton.styleFrom(
-                            
+                            backgroundColor: Colors.purpleAccent,
+                            foregroundColor: Colors.white,
                           ),
                           child: Text('Submit'),
                         ),
@@ -175,33 +242,6 @@ class _SelectStateState extends State<SelectState> {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-          padding: EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color.fromARGB(148, 217, 0, 255),
-                Color.fromARGB(144, 243, 229, 245)
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '© 2024 PepFuel',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

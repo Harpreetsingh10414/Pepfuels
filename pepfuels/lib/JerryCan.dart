@@ -108,23 +108,14 @@ class _JerryCanState extends State<JerryCan> {
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    SizedBox(height: 20),
+                    Column(
                       children: [
-                        Column(
-                          children: <Widget>[
-                            _buildQuantityButton(10),
-                            SizedBox(height: 10), // Space between buttons
-                            _buildQuantityButton(15),
-                          ],
-                        ),
-                        SizedBox(width: 20), // Space between columns
-                        Column(
-                          children: <Widget>[
-                            _buildQuantityButton(20),
-                          ],
-                        ),
+                        _buildQuantityButton(5),
+                        SizedBox(height: 10), // Space between buttons
+                        _buildQuantityButton(10),
+                        SizedBox(height: 10), // Space between buttons
+                        _buildQuantityButton(15),
                       ],
                     ),
                     SizedBox(height: 20),

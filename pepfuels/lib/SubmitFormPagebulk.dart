@@ -28,6 +28,58 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
   bool _isLoading = false;
   String _errorMessage = '';
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserProfile();
+  }
+
+  Future<void> _fetchUserProfile() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwtToken');
+
+      if (token == null) {
+        setState(() {
+          _errorMessage = 'No token found. Please log in again.';
+          _isLoading = false;
+        });
+        return;
+      }
+
+      final response = await http.get(
+        Uri.parse('http://184.168.120.64:5000/api/Profile'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final profileData = json.decode(response.body);
+        _nameController.text = profileData['name'] ?? '';
+        _addressController.text = profileData['address'] ?? '';
+        _mobileController.text = profileData['phone'] ?? '';
+        _emailController.text = profileData['email'] ?? '';
+      } else {
+        setState(() {
+          _errorMessage = 'Failed to fetch user profile. Status code: ${response.statusCode}';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error fetching profile: ${e.toString()}';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   Future<void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
       setState(() {
@@ -40,6 +92,12 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
       final mobile = _mobileController.text;
       final email = _emailController.text;
 
+      // Calculate total amount
+      final dieselPrice = double.tryParse(widget.dieselPrice) ?? 0.0;
+      final baseAmount = dieselPrice * widget.quantity;
+      final deliveryCharge = 100;
+      final totalAmount = baseAmount + deliveryCharge;
+
       // Prepare the payload for the API request
       final payload = {
         'fuelType': 'diesel',
@@ -48,6 +106,7 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
         'mobile': mobile,
         'name': name,
         'email': email,
+        'totalAmount': totalAmount,
       };
 
       try {
@@ -200,7 +259,7 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 15),
                       TextFormField(
                         controller: _addressController,
                         decoration: InputDecoration(
@@ -218,7 +277,7 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 15),
                       TextFormField(
                         controller: _mobileController,
                         decoration: InputDecoration(
@@ -240,7 +299,7 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 15),
                       TextFormField(
                         controller: _emailController,
                         decoration: InputDecoration(
