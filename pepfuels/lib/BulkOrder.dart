@@ -38,7 +38,7 @@ class _BulkOrderState extends State<BulkOrder> {
       MaterialPageRoute(
         builder: (context) => SubmitFormPagebulk(
           dieselPrice: widget.dieselPrice,
-          quantity: int.tryParse(_litersController.text) ?? 0,
+          quantity: double.tryParse(_litersController.text) ?? 0,
           totalAmount: _totalAmount,
         ),
       ),
