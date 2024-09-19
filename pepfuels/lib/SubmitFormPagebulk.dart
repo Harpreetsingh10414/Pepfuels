@@ -5,13 +5,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SubmitFormPagebulk extends StatefulWidget {
   final String dieselPrice;
-  final int quantity;
+  final double quantity; // Updated to double
   final int totalAmount;
 
   const SubmitFormPagebulk({
     Key? key,
     required this.dieselPrice,
-    required this.quantity,
+    required this.quantity, // Updated to double
     required this.totalAmount,
   }) : super(key: key);
 
@@ -66,7 +66,8 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
         _emailController.text = profileData['email'] ?? '';
       } else {
         setState(() {
-          _errorMessage = 'Failed to fetch user profile. Status code: ${response.statusCode}';
+          _errorMessage =
+              'Failed to fetch user profile. Status code: ${response.statusCode}';
         });
       }
     } catch (e) {
@@ -94,14 +95,15 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
 
       // Calculate total amount
       final dieselPrice = double.tryParse(widget.dieselPrice) ?? 0.0;
-      final baseAmount = dieselPrice * widget.quantity;
+      final baseAmount =
+          dieselPrice * widget.quantity; // Using double for quantity
       final deliveryCharge = 100;
       final totalAmount = baseAmount + deliveryCharge;
 
       // Prepare the payload for the API request
       final payload = {
         'fuelType': 'diesel',
-        'quantity': widget.quantity,
+        'quantity': widget.quantity, // Send quantity as double
         'deliveryAddress': address,
         'mobile': mobile,
         'name': name,
@@ -148,7 +150,8 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
         } else {
           final errorResponse = jsonDecode(response.body);
           setState(() {
-            _errorMessage = errorResponse['errors']?.join(', ') ?? 'Something went wrong';
+            _errorMessage =
+                errorResponse['errors']?.join(', ') ?? 'Something went wrong';
           });
         }
       } catch (e) {
@@ -166,7 +169,8 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
   @override
   Widget build(BuildContext context) {
     final dieselPrice = double.tryParse(widget.dieselPrice) ?? 0.0;
-    final baseAmount = dieselPrice * widget.quantity;
+    final baseAmount =
+        dieselPrice * widget.quantity; // Using double for quantity
     final deliveryCharge = 100;
     final totalAmount = baseAmount + deliveryCharge;
 
@@ -219,7 +223,7 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
                       ),
                       SizedBox(height: 10),
                       Text(
-                        'Quantity: ${widget.quantity} Liters',
+                        'Quantity: ${widget.quantity} Liters', // Display quantity as double
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -250,7 +254,8 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
                           filled: true,
                           border: OutlineInputBorder(),
                           floatingLabelBehavior: FloatingLabelBehavior.never,
-                          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 10),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -268,7 +273,8 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
                           filled: true,
                           border: OutlineInputBorder(),
                           floatingLabelBehavior: FloatingLabelBehavior.never,
-                          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 10),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -286,15 +292,13 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
                           filled: true,
                           border: OutlineInputBorder(),
                           floatingLabelBehavior: FloatingLabelBehavior.never,
-                          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 10),
                         ),
                         keyboardType: TextInputType.phone,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your mobile number';
-                          }
-                          if (!RegExp(r'^\+?[0-9]{10,15}$').hasMatch(value)) {
-                            return 'Please enter a valid mobile number';
                           }
                           return null;
                         },
@@ -308,40 +312,40 @@ class _SubmitFormPagebulkState extends State<SubmitFormPagebulk> {
                           filled: true,
                           border: OutlineInputBorder(),
                           floatingLabelBehavior: FloatingLabelBehavior.never,
-                          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 10),
                         ),
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your email';
                           }
-                          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+$').hasMatch(value)) {
-                            return 'Please enter a valid email address';
-                          }
                           return null;
                         },
                       ),
                       SizedBox(height: 20),
-                      _isLoading
-                          ? CircularProgressIndicator()
-                          : ElevatedButton(
-                              onPressed: _submitForm,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Text('Submit'),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(double.infinity, 50),
-                              ),
-                            ),
                       if (_errorMessage.isNotEmpty)
                         Padding(
-                          padding: const EdgeInsets.only(top: 20),
+                          padding: const EdgeInsets.only(bottom: 10.0),
                           child: Text(
                             _errorMessage,
                             style: TextStyle(color: Colors.red),
                           ),
                         ),
+                      ElevatedButton(
+                        onPressed: _submitForm,
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 30),
+                          backgroundColor: Colors
+                              .blue, // Use backgroundColor instead of primary
+                        ),
+                        child: _isLoading
+                            ? CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : Text('Submit'),
+                      ),
                     ],
                   ),
                 ),

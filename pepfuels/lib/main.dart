@@ -72,7 +72,7 @@ class MyApp extends StatelessWidget {
           final args = ModalRoute.of(context)?.settings.arguments
               as Map<String, dynamic>?;
           final dieselPrice = args?['dieselPrice'] as String? ?? '0';
-          final quantity = args?['quantity'] as int? ?? 0;
+          final quantity = args?['quantity'] as double? ?? 0;
           final totalAmount = args?['totalAmount'] as int? ?? 0;
 
           return SubmitFormPagebulk(

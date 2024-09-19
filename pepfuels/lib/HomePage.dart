@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Express Delivery',
+                    'PEPFUELS',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -68,7 +68,7 @@ class HomePage extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'We provide a special delivery feature, which is fast delivery. With us you can also enjoy other types of shipping.',
+                    '"Fueling your way, every day " Doorstep solutions for Energy',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
