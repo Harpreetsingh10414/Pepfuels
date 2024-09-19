@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async'; // For Timer
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TrackingPage extends StatefulWidget {
@@ -14,17 +15,29 @@ class _TrackingPageState extends State<TrackingPage> {
   bool _isLoading = true;
   List<dynamic> _orders = [];
   String _errorMessage = '';
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     _fetchOrders();
+    // Set a periodic refresh every 30 seconds
+    _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      _fetchOrders();
+    });
+  }
+
+  @override
+  void dispose() {
+    // Cancel the timer when the widget is disposed to prevent memory leaks
+    _timer?.cancel();
+    super.dispose();
   }
 
   Future<void> _fetchOrders() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('jwtToken'); // Retrieve token from SharedPreferences
-    String? userId = prefs.getString('userId');  // Retrieve userId
+    String? userId = prefs.getString('userId'); // Retrieve userId
 
     if (token == null) {
       setState(() {
@@ -88,7 +101,6 @@ class _TrackingPageState extends State<TrackingPage> {
         });
       } else {
         setState(() {
-          // _errorMessage = 'Failed to load orders. Status code: ${response.statusCode}, Response body: ${response.body}';
           _errorMessage = 'Your Order Will be Update Shortly Please Wait For a While  Thankyou!';
           _isLoading = false;
         });
@@ -105,7 +117,7 @@ class _TrackingPageState extends State<TrackingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-      title: Center(
+        title: Center(
           child: Image.asset(
             'assets/images/logo.png', // Ensure this path is correct
             width: 200,
@@ -113,7 +125,7 @@ class _TrackingPageState extends State<TrackingPage> {
             fit: BoxFit.contain,
           ),
         ),
-             backgroundColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         automaticallyImplyLeading: false,
       ),
@@ -131,9 +143,24 @@ class _TrackingPageState extends State<TrackingPage> {
               ? const Center(child: CircularProgressIndicator())
               : _errorMessage.isNotEmpty
                   ? Center(
-                      child: Text(
-                        _errorMessage,
-                        style: const TextStyle(color: Colors.red, fontSize: 16),
+                      child: Container(
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Colors.purple, Colors.deepPurple],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          _errorMessage,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white,  // White text color
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
                     )
                   : ListView.builder(

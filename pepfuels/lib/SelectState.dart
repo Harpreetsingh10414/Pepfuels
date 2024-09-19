@@ -18,6 +18,7 @@ class _SelectStateState extends State<SelectState> {
   TextEditingController searchController = TextEditingController();
   bool isLoading = true;
   String errorMessage = '';
+  FocusNode focusNode = FocusNode();  // FocusNode to track focus state
 
   @override
   void initState() {
@@ -35,6 +36,7 @@ class _SelectStateState extends State<SelectState> {
   @override
   void dispose() {
     searchController.dispose();
+    focusNode.dispose();  // Dispose of focusNode
     super.dispose();
   }
 
@@ -66,8 +68,8 @@ class _SelectStateState extends State<SelectState> {
             return {
               'name': city['name'],
               'dieselPrice': city['dieselPrice'] is int
-                ? (city['dieselPrice'] as int).toDouble()
-                : city['dieselPrice'] as double,
+                  ? (city['dieselPrice'] as int).toDouble()
+                  : city['dieselPrice'] as double,
             };
           }).toList();
           isLoading = false;
@@ -178,47 +180,50 @@ class _SelectStateState extends State<SelectState> {
                         ),
                         SizedBox(height: 20),
                         isLoading
-                          ? Center(child: CircularProgressIndicator())
-                          : DropdownSearch<String>(
-                              items: cities.map((city) => city['name'] as String).toList(),
-                              selectedItem: selectedCity,
-                              onChanged: (String? newCity) {
-                                setState(() {
-                                  selectedCity = newCity;
-                                  dieselPrice = '';
-                                  searchController.text = newCity ?? ''; // Update the text field with the selected city
-                                });
-                                if (newCity != null) {
-                                  fetchDieselPrice(newCity);
-                                }
-                              },
-                              dropdownDecoratorProps: DropDownDecoratorProps(
-                                dropdownSearchDecoration: InputDecoration(
-                                  labelText: "Select a city",
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  labelStyle: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                              ),
-                              popupProps: PopupProps.menu(
-                                showSearchBox: true,
-                                searchFieldProps: TextFieldProps(
-                                  controller: searchController, // Attach the controller
-                                  autofocus: true,
-                                  decoration: InputDecoration(
-                                    hintText: "Search or enter a city",
-                                    filled: true,
+                            ? Center(child: CircularProgressIndicator())
+                            : DropdownSearch<String>(
+                                items: cities.map((city) => city['name'] as String).toList(),
+                                selectedItem: selectedCity,
+                                onChanged: (String? newCity) {
+                                  setState(() {
+                                    selectedCity = newCity;
+                                    dieselPrice = '';
+                                    searchController.text = newCity ?? ''; // Update the text field with the selected city
+                                  });
+                                  if (newCity != null) {
+                                    fetchDieselPrice(newCity);
+                                  }
+                                },
+                                dropdownDecoratorProps: DropDownDecoratorProps(
+                                  dropdownSearchDecoration: InputDecoration(
+                                    labelText: focusNode.hasFocus ? null : "Select a city", // Hide label when focused
                                     fillColor: Colors.white,
+                                    filled: true,
+                                    labelStyle: TextStyle(
+                                      color: const Color.fromARGB(255, 0, 0, 0),
+                                    ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                   ),
                                 ),
+                                popupProps: PopupProps.menu(
+                                  showSearchBox: true,
+                                  searchFieldProps: TextFieldProps(
+                                    controller: searchController,
+                                    focusNode: focusNode,  // Attach the focusNode
+                                    autofocus: true,
+                                    decoration: InputDecoration(
+                                      hintText: "Search or enter a city",
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
                         SizedBox(height: 20),
                         if (dieselPrice.isNotEmpty)
                           Text(
