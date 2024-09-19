@@ -109,7 +109,7 @@ router.post(
       .isIn(['petrol', 'diesel'])
       .withMessage('Fuel type must be either petrol or diesel'),
     check('quantity')
-      .isInt({ min: 100, max: 6000 })
+      .isInt({ min: 100, max: 50000 })
       .withMessage('Quantity must be an integer between 100 and 6000'),
     check('deliveryAddress')
       .notEmpty()

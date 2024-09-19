@@ -19,7 +19,7 @@ const BulkOrderSchema = new mongoose.Schema({
     type: Number, 
     required: true, 
     min: 100, 
-    max: 6000 
+    max: 50000 
   },
   totalAmount: { 
     type: Number, 

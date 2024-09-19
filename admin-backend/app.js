@@ -1,6 +1,7 @@
 require('dotenv').config(); // Ensure this is at the top
 
 const express = require('express');
+const path = require('path');
 const connectDB = require('./config/db');
 const { swaggerUi, swaggerSpec } = require('./config/swaggerConfig');
 const authRoutes = require('./routes/authRoutes');
@@ -19,8 +20,7 @@ connectDB();
 
 // Middleware
 app.use(express.json());
-// Use default CORS middleware to allow all origins for now
-app.use(cors());
+app.use(cors()); // Allow all origins
 
 // Swagger setup
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -36,7 +36,7 @@ app.use('/api/orderTracking', orderTrackingRoutes); // Use the order tracking ro
 
 const PORT = process.env.PORT || 5001;
 
-// Listen on all network interfaces and specific IP
+// Create HTTP server
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://184.168.120.64:${PORT}`);
   console.log(`Swagger documentation available at http://184.168.120.64:${PORT}/api-docs`);
