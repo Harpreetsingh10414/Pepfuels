@@ -19,9 +19,9 @@ class _BulkOrderState extends State<BulkOrder> {
     final double pricePerLiter = double.tryParse(widget.dieselPrice) ?? 100.0; // Default to 100 if parsing fails
     final int selectedLiters = int.tryParse(_litersController.text) ?? 0;
 
-    if (selectedLiters < 500 || selectedLiters > 12000) {
+    if (selectedLiters < 500 || selectedLiters > 50000) {
       setState(() {
-        _errorText = 'Please enter a quantity between 500 and 12,000 liters.';
+        _errorText = 'Please enter a quantity between 500 and 50,000 liters.';
         _totalAmount = 0;
       });
     } else {

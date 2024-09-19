@@ -71,7 +71,7 @@ class _FuelState extends State<Fuel> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          "We're an on-demand fuel delivery application that allows users to order fuel for their vehicle anytime, anywhere.",
+                          "We're an on-demand fuel delivery application that allows users to order fuel for their  Equipments & Heavy fleets  anytime, anywhere.",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,
