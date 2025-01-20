@@ -50,7 +50,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.pepfuels" // Use a unique application ID for your app
+        applicationId "com.pepfuel.app" // Use a unique application ID for your app
         minSdkVersion 21 // Updated to 21 as per Google Play requirements
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
