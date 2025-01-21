@@ -68,6 +68,6 @@ const PORT = process.env.PORT || 5000;
 
 // Listen on all network interfaces and specific IP
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on http://184.168.120.64:${PORT}`);
-  console.log(`Swagger documentation available at http://184.168.120.64:${PORT}/api-docs`);
+  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Swagger documentation available at http://localhost:${PORT}/api-docs`);
 });

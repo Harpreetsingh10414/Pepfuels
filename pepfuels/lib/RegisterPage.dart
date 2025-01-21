@@ -32,7 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://184.168.120.64:5000/api/auth/register'), // Replace with your backend URL
+        Uri.parse('http://localhost:5000/api/auth/register'), // Replace with your backend URL
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'name': _nameController.text,
