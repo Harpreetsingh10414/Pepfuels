@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import './Constants.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -43,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://184.168.120.64:5000/api/auth/login'), // Replace with your backend URL
+        Uri.parse('$BASE_URL/auth/login'), // Replace with your backend URL
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'email': _emailController.text,

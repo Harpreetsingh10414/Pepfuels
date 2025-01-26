@@ -3,6 +3,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async'; // For Timer
 import 'package:shared_preferences/shared_preferences.dart';
+import './Constants.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class TrackingPage extends StatefulWidget {
   const TrackingPage({super.key});
@@ -51,7 +54,7 @@ class _TrackingPageState extends State<TrackingPage> {
     if (userId == null) {
       try {
         final profileResponse = await http.get(
-          Uri.parse('http://184.168.120.64:5000/api/profile'),
+          Uri.parse('$BASE_URL/profile'),
           headers: {
             'Authorization': 'Bearer $token',
           },
@@ -87,7 +90,7 @@ class _TrackingPageState extends State<TrackingPage> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://184.168.120.64:5000/api/orderByUserId/user/$userId'),
+        Uri.parse('$BASE_URL/orderByUserId/user/$userId'),
         headers: {
           'Authorization': 'Bearer $token',
         },

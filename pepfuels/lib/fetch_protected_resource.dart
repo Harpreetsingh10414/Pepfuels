@@ -1,6 +1,9 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import './Constants.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 Future<void> fetchProtectedResource() async {
   final prefs = await SharedPreferences.getInstance();
@@ -12,7 +15,7 @@ Future<void> fetchProtectedResource() async {
   }
 
   final response = await http.get(
-    Uri.parse('http://localhost:5000/api/protected'),
+    Uri.parse('$BASE_URL/protected'),
     headers: {'Authorization': 'Bearer $token'},
   );
 

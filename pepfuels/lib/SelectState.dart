@@ -3,6 +3,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import './Constants.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class SelectState extends StatefulWidget {
   const SelectState({super.key});
@@ -54,7 +57,7 @@ class _SelectStateState extends State<SelectState> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://184.168.120.64:5000/api/cities'),
+        Uri.parse('$BASE_URL/cities'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',

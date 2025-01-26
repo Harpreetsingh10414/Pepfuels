@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import './Constants.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class SubmitFormPagejeery extends StatefulWidget {
   final String dieselPrice;
@@ -52,7 +55,7 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
       }
 
       final response = await http.get(
-        Uri.parse('http://184.168.120.64:5000/api/Profile'),
+        Uri.parse('$BASE_URL/Profile'),
         headers: {
           'Authorization': 'Bearer $token',
         },
@@ -114,7 +117,7 @@ class _SubmitFormPagejeeryState extends State<SubmitFormPagejeery> {
 
         // Make the POST request
         final response = await http.post(
-          Uri.parse('http://184.168.120.64:5000/api/jerrycanOrders'), // Ensure this endpoint is correct
+          Uri.parse('$BASE_URL/jerrycanOrders'), // Ensure this endpoint is correct
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token', // Use the retrieved token
