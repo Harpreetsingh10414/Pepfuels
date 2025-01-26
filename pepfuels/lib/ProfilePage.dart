@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import './Constants.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -41,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://184.168.120.64:5000/api/profile'), // Update with your backend URL
+        Uri.parse('$BASE_URL/profile'), // Update with your backend URL
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',

@@ -4,6 +4,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import 'petrol_pump_page.dart'; // Import the PetrolPumpPage class
+import './Constants.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class PumpLocator extends StatefulWidget {
   final int selectedLiters;
@@ -101,7 +104,7 @@ class _PumpLocatorState extends State<PumpLocator> {
     print('Fetching locations from backend...');
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:5000/api/google-places/search?query=cities+in+india'),
+        Uri.parse('$BASE_URL/google-places/search?query=cities+in+india'),
       );
 
       if (response.statusCode == 200) {
@@ -178,7 +181,7 @@ class _PumpLocatorState extends State<PumpLocator> {
   Future<LatLng?> _getCoordinatesFromApi(String location) async {
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:5000/api/get-coordinates?location=$location'),
+        Uri.parse('$BASE_URL/get-coordinates?location=$location'),
       );
 
       if (response.statusCode == 200) {

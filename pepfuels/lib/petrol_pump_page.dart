@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import './Constants.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class PetrolPumpPage extends StatefulWidget {
   final int quantity;
@@ -32,7 +35,7 @@ class _PetrolPumpPageState extends State<PetrolPumpPage> {
   Future<void> _fetchPetrolPumps() async {
     final response = await http.get(
       Uri.parse(
-        'http://localhost:5000/api/petrolPumps?latitude=${widget.latitude}&longitude=${widget.longitude}&radius=${widget.radius}',
+        '$BASE_URL/petrolPumps?latitude=${widget.latitude}&longitude=${widget.longitude}&radius=${widget.radius}',
       ),
     );
 

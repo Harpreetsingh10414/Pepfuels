@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import './Constants.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -16,8 +19,10 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
-  final TextEditingController _companyNameController = TextEditingController();  // New controller for company name
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  final TextEditingController _companyNameController =
+      TextEditingController(); // New controller for company name
   bool _isLoading = false;
   String _errorMessage = '';
   String? _password;
@@ -32,14 +37,15 @@ class _RegisterPageState extends State<RegisterPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:5000/api/auth/register'), // Replace with your backend URL
+         Uri.parse('$BASE_URL/auth/register'),  // Replace with your backend URL
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'name': _nameController.text,
           'email': _emailController.text,
           'phone': _phoneController.text,
           'password': _passwordController.text,
-          'companyName': _companyNameController.text,  // Include company name in the request body
+          'companyName': _companyNameController
+              .text, // Include company name in the request body
         }),
       );
 
@@ -54,12 +60,14 @@ class _RegisterPageState extends State<RegisterPage> {
           _isLoading = false;
         });
 
-        Navigator.pushReplacementNamed(context, 'login'); // Navigate to login page
+        Navigator.pushReplacementNamed(
+            context, 'login'); // Navigate to login page
       } else {
         final responseBody = json.decode(response.body);
         setState(() {
           _isLoading = false;
-          _errorMessage = responseBody['msg'] ?? 'Registration failed. Please try again.';
+          _errorMessage =
+              responseBody['msg'] ?? 'Registration failed. Please try again.';
         });
       }
     } catch (e) {
@@ -82,7 +90,8 @@ class _RegisterPageState extends State<RegisterPage> {
             fit: BoxFit.cover,
           ),
           Container(
-            color: Color.fromARGB(0, 255, 255, 255).withOpacity(0.5), // Overlay shade
+            color: Color.fromARGB(0, 255, 255, 255)
+                .withOpacity(0.5), // Overlay shade
           ),
           Center(
             child: SingleChildScrollView(
@@ -170,8 +179,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your phone number';
                             }
-                            if (!RegExp(r'^\+?[0-9]{10,15}$')
-                                .hasMatch(value)) {
+                            if (!RegExp(r'^\+?[0-9]{10,15}$').hasMatch(value)) {
                               return 'Please enter a valid phone number';
                             }
                             return null;
@@ -179,7 +187,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         SizedBox(height: 20),
                         TextFormField(
-                          controller: _companyNameController,  // Company name input field
+                          controller:
+                              _companyNameController, // Company name input field
                           decoration: InputDecoration(
                             labelText: 'Company Name',
                             border: OutlineInputBorder(
