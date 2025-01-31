@@ -64,7 +64,7 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5002;
 
 // Listen on all network interfaces and specific IP
 app.listen(PORT, '0.0.0.0', () => {
