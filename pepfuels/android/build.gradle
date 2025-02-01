@@ -1,12 +1,18 @@
 buildscript {
-    ext.kotlin_version = '1.8.0'
+    ext.kotlin_version = '1.8.10'  // Recommended stable version
+
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
+        // Kotlin Gradle Plugin
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        
+        // Ensure AGP version is at least 7.3.1 (updated to latest stable)
+        classpath "com.android.tools.build:gradle:7.4.2"
+
     }
 }
 
@@ -18,10 +24,9 @@ allprojects {
 }
 
 rootProject.buildDir = '../build'
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
     project.evaluationDependsOn(':app')
 }
 
