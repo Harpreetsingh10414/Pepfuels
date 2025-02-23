@@ -17,6 +17,7 @@
     "express": "^4.19.2",
     "express-validator": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
+    "moment": "^2.30.1",
     "mongoose": "^8.5.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",

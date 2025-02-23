@@ -4,6 +4,7 @@ const authMiddleware = require('../middleware/auth');
 const BulkOrder = require('../models/BulkOrder');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
+const moment = require('moment');
 
 // Import mock fuel prices (if still needed for reference)
 const fuelPrices = require('../mockFuelPrices'); // Import mock fuel prices
@@ -101,29 +102,43 @@ const fuelPrices = require('../mockFuelPrices'); // Import mock fuel prices
  *                         type: string
  */
 
+/**
+ * Generate the next bulk order ID in the pattern: BULK/YYYY/MM/00001
+ * @returns {Promise<string>} - The next bulk order ID
+ */
+const generateBulkOrderID = async () => {
+  const dateKey = moment().format('YYYY/MM');
+
+  // Find the latest bulk order in the current month
+  const latestOrder = await BulkOrder.findOne({ orderID: { $regex: `^BULK/${dateKey}/` } })
+    .sort({ createdAt: -1 });
+
+  let nextNumber = '00001';
+  if (latestOrder && latestOrder.orderID) {
+    const parts = latestOrder.orderID.split('/');
+    const lastNumber = parseInt(parts[3], 10); // Extract the last number part
+    nextNumber = (lastNumber + 1).toString().padStart(5, '0');
+  }
+
+  return `BULK/${dateKey}/${nextNumber}`;
+};
+
+// Bulk Order Creation Route
 router.post(
   '/',
   [
     authMiddleware,
-    check('fuelType')
-      .isIn(['petrol', 'diesel'])
-      .withMessage('Fuel type must be either petrol or diesel'),
-    check('quantity')
-      .isInt({ min: 100, max: 50000 })
-      .withMessage('Quantity must be an integer between 100 and 6000'),
-    check('deliveryAddress')
-      .notEmpty()
-      .withMessage('Delivery address is required'),
+    check('fuelType').isIn(['petrol', 'diesel']).withMessage('Fuel type must be either petrol or diesel'),
+    check('quantity').isInt({ min: 100, max: 50000 }).withMessage('Quantity must be an integer between 100 and 50000'),
+    check('deliveryAddress').notEmpty().withMessage('Delivery address is required'),
     check('mobile', 'Mobile number is required').not().isEmpty(),
     check('name', 'Name is required').not().isEmpty(),
     check('email', 'Valid email is required').isEmail(),
     check('totalAmount', 'Total amount is required').isNumeric(),
   ],
   async (req, res) => {
-    // Log incoming request
     console.log('Incoming request to create bulk order:', req.body);
 
-    // Validate request
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       console.log('Validation errors:', errors.array());
@@ -133,29 +148,26 @@ router.post(
     const { fuelType, quantity, deliveryAddress, mobile, name, email, totalAmount } = req.body;
     const userID = req.user.id;
 
-    console.log('Request validated. Proceeding with order creation.');
-
     try {
-      // Generate unique orderID
-      const orderID = uuidv4();
-      console.log('Generated unique orderID:', orderID);
+      // Generate the new bulk order ID
+      const orderID = await generateBulkOrderID();
+      console.log('Generated bulk order ID:', orderID);
 
-      // Create new order
+      // Create and save the new order
       const newOrder = new BulkOrder({
         orderID,
         userID,
         fuelType,
         quantity,
-        totalAmount, // Use the amount passed from the frontend
+        totalAmount,
         deliveryAddress,
         mobile,
         name,
-        email
+        email,
       });
 
-      // Save the new order to the database
       await newOrder.save();
-      console.log('New order saved successfully:', newOrder);
+      console.log('New bulk order saved successfully:', newOrder);
 
       res.status(201).json(newOrder);
     } catch (err) {

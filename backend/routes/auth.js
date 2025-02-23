@@ -6,6 +6,7 @@ const User = require('../models/User');
 const authMiddleware = require('../middleware/auth'); // Make sure this path is correct
 const { v4: uuidv4 } = require('uuid'); // For generating unique userId
 const router = express.Router();
+const moment = require('moment');
 
 // User Registration Route
 /**
@@ -50,6 +51,27 @@ const router = express.Router();
  *         description: Server error
  */
 
+/**
+ * Get the next user ID in the pattern: YYYY/MM/00001
+ * @returns {Promise<string>} - The next userId
+ */
+const generateUserID = async () => {
+  const dateKey = moment().format('YYYY/MM');
+
+  // Find the latest user created in the current month
+  const latestUser = await User.findOne({ userId: { $regex: `^${dateKey}/` } })
+    .sort({ createdAt: -1 });
+
+  let nextNumber = '00001';
+  if (latestUser && latestUser.userId) {
+    const parts = latestUser.userId.split('/');
+    const lastNumber = parseInt(parts[2], 10); // Extract last part of userId
+    nextNumber = (lastNumber + 1).toString().padStart(5, '0');
+  }
+
+  return `${dateKey}/${nextNumber}`;
+};
+
 // User Registration Route
 router.post(
   '/register',
@@ -57,7 +79,7 @@ router.post(
     check('name', 'Name is required').not().isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
     check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),
-    check('phone', 'Phone number is required').optional().isString() // Add validation for phone number
+    check('phone', 'Phone number is required').optional().isString(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -69,41 +91,32 @@ router.post(
 
     try {
       let user = await User.findOne({ email });
-
       if (user) {
         return res.status(400).json({ msg: 'User already exists' });
       }
 
+      const userId = await generateUserID(); // Generate new formatted userId
+
       user = new User({
         name,
         email,
-        password,
+        password, // Password hashing can be re-enabled later
         phone,
-        companyName, // Include companyName in registration
-        userId: uuidv4() // Generate a unique userId
+        companyName,
+        userId,
       });
-
-      // Commenting out hashing
-      // const salt = await bcrypt.genSalt(10);
-      // user.password = await bcrypt.hash(password, salt);
-
-      user.password = password;
 
       await user.save();
 
-      const payload = {
-        user: {
-          id: user.id,
-        },
-      };
+      const payload = { user: { id: user.id } };
 
       jwt.sign(
         payload,
         process.env.JWT_SECRET,
-        { expiresIn: '30d' }, // Set a long expiration time of 30 days
+        { expiresIn: '30d' },
         (err, token) => {
           if (err) throw err;
-          res.json({ token });
+          res.json({ token, userId });
         }
       );
     } catch (err) {
@@ -111,7 +124,7 @@ router.post(
       res.status(500).send('Server error');
     }
   }
-)
+);
 
 
 // User Login Route
@@ -174,10 +187,10 @@ router.post(
       }
 
       // Check if user is already logged in
-      if (user.isLoggedIn) {
-        console.log("User already logged in");
-        return res.status(400).json({ msg: 'User already logged in' });
-      }
+      // if (user.isLoggedIn) {
+      //   console.log("User already logged in");
+      //   return res.status(400).json({ msg: 'User already logged in' });
+      // }
 
       // Compare passwords
       const isMatch = password === user.password;
